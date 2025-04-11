@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Topic - Wall Segmentation in Floorplans</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* Additional styles for the notebook page */
+        .notebook-page {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="%23e0e0e0" stroke-width="1"/><line x1="0" y1="20" x2="100" y2="20" stroke="%23e0e0e0" stroke-width="1"/><line x1="0" y1="40" x2="100" y2="40" stroke="%23e0e0e0" stroke-width="1"/><line x1="0" y1="60" x2="100" y2="60" stroke="%23e0e0e0" stroke-width="1"/><line x1="0" y1="80" x2="100" y2="80" stroke="%23e0e0e0" stroke-width="1"/></svg>');
+            background-size: 100px 100px;
+            padding: 40px;
+            position: relative;
+        }
+
+        .notebook-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: -1;
+        }
+
+        .page-number {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 0.8em;
+            color: var(--accent-color);
+        }
+
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            text-decoration: none;
+            color: var(--accent-color);
+            font-size: 1.2em;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .topic-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .topic-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .topic-meta {
+            font-style: italic;
+            color: var(--accent-color);
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--line-color);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            border-bottom: 2px solid var(--line-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .handwritten {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+
+        .margin-note {
+            float: right;
+            width: 200px;
+            margin: 0 0 20px 20px;
+            padding: 10px;
+            background: var(--highlight-color);
+            border: 1px solid var(--line-color);
+            font-style: italic;
+        }
+
+        .paper-review {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .paper-review h3 {
+            margin-top: 0;
+            color: var(--accent-color);
+        }
+
+        .paper-review ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .paper-review li {
+            margin-bottom: 10px;
+        }
+
+        .results-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .result-item {
+            text-align: center;
+        }
+
+        .result-item img {
+            max-width: 100%;
+            border: 1px solid var(--line-color);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-item p {
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .literature-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .literature-table th, .literature-table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+
+        .literature-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .literature-table ul {
+            margin: 0;
+            padding-left: 0;
+            list-style-type: none;
+        }
+
+        .literature-table li {
+            margin-bottom: 8px;
+        }
+
+        .key-takeaways {
+            background: #f8f9fa;
+            padding: 20px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .key-takeaways h3 {
+            margin-top: 0;
+            border-bottom: 2px solid var(--line-color);
+            padding-bottom: 10px;
+        }
+
+        .takeaway-item {
+            margin-bottom: 20px;
+        }
+
+        .takeaway-item h4 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .takeaway-item ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        .code-file pre {
+            padding: 10px;
+            background-color: #f8f9fa;
+        }
+
+        .code-block {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 5px;
+            position: relative;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+
+        .code-header {
+            background-color: #2d2d2d;
+            padding: 8px 15px;
+            border-radius: 5px 5px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .code-header h4 {
+            margin: 0;
+            color: #d4d4d4;
+            font-size: 14px;
+        }
+
+        .copy-button {
+            background-color: #3e3e3e;
+            color: #d4d4d4;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .copy-button:hover {
+            background-color: #4e4e4e;
+        }
+
+        .code-content {
+            display: none;
+            margin-top: 0;
+        }
+
+        .code-content.active {
+            display: block;
+        }
+
+        .code-files {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .code-file {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="notebook">
+        <div class="notebook-page">
+            <a href="../index.html" class="back-link">← Back to Topics</a>
+            
+            <div class="topic-header">
+                <h1>Wall Segmentation in Floorplans using Mask R-CNN</h1>
+                <div class="topic-meta">
+                    <p>Last update: July 2024</p>
+                    <div class="topic-tags">
+                        <span class="tag">Computer Vision</span>
+                        <span class="tag">Deep Learning</span>
+                        <span class="tag">Mask R-CNN</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="handwritten">
+                <section class="section">
+                    <h2>Abstract</h2>
+                    <div class="content">
+                        <p>This research presents a Mask R-CNN-based approach for accurate wall segmentation in floorplan images. The project leverages the instance segmentation capabilities of Mask R-CNN to address the challenges of wall detection and extraction in complex architectural layouts. By utilizing a pre-trained Mask R-CNN model and fine-tuning it on a specialized floorplan dataset, we achieve precise pixel-level segmentation of wall structures, enabling improved accuracy in architectural analysis and 3D reconstruction tasks.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Background</h2>
+                    <div class="content">
+                        <h3>Problem Statement</h3>
+                        <p>Accurate wall segmentation in floorplans is a critical task in architectural analysis and 3D reconstruction. Traditional computer vision approaches often struggle with the complex nature of floorplan images, which present unique challenges:</p>
+                        <ul>
+                            <li>Complex layouts with overlapping architectural elements</li>
+                            <li>Varied wall thicknesses and styles across different architectural designs</li>
+                            <li>Presence of furniture, doors, and other elements that can interfere with wall detection</li>
+                            <li>Need for pixel-level accuracy in wall boundary detection</li>
+                            <li>Handling of different architectural styles and notations</li>
+                        </ul>
+                        <div class="margin-note">
+                            <strong>Note:</strong> Accurate wall segmentation is fundamental for subsequent tasks like room detection and 3D reconstruction.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Literature Review</h2>
+                    <div class="content">
+                        <table class="literature-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%">Paper</th>
+                                    <th style="width: 15%">Focus</th>
+                                    <th style="width: 20%">Strengths</th>
+                                    <th style="width: 20%">Weaknesses</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><a href="https://www.mdpi.com/2220-9964/10/12/828" target="_blank">01. Automatic Extraction of Indoor Spatial Information from Floor Plan Image</a></td>
+                                    <td>Large-Scale Complex Buildings</td>
+                                    <td>
+                                        <ul>
+                                            <li>Vectorizes objects using CNN</li>
+                                            <li>Handles 4 CVC dataset formats</li>
+                                            <li>87.77% detection rate</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            <li>Time-consuming (5 min/225 patches)</li>
+                                            <li>85.53% recognition accuracy</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><a href="https://www.mdpi.com/2076-3417/11/23/11174" target="_blank">02. Towards Robust Object Detection in Floor Plan Images</a></td>
+                                    <td>Furniture Detection</td>
+                                    <td>
+                                        <ul>
+                                            <li>99.8% precision</li>
+                                            <li>Public dataset</li>
+                                            <li>16 furniture types</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            <li>Synthetic data</li>
+                                            <li>Computationally intensive</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><a href="https://dam-oclc.bac-lac.gc.ca/download?is_thesis=1&oclc_number=1199654049&id=5e379175-0349-4107-9c2e-aff6c6baa3f1&fileName=Cabrera-Vargas_Dany_MSc_2018.pdf" target="_blank">03. Wall Extraction and Room Detection</a></td>
+                                    <td>Multi-Unit Floor Plans</td>
+                                    <td>
+                                        <ul>
+                                            <li>Combines wall/room detection</li>
+                                            <li>Handles overlapping elements</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            <li>Complex approach</li>
+                                            <li>Limited testing</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><a href="https://www.sciencedirect.com/science/article/abs/pii/S0926580522002217" target="_blank">04. Deep Floor Plan Recognition</a></td>
+                                    <td>Multi-Task Network</td>
+                                    <td>
+                                        <ul>
+                                            <li>Room-boundary attention</li>
+                                            <li>Handles complex shapes</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            <li>Requires fine-tuning</li>
+                                            <li>High computational cost</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><a href="https://arxiv.org/abs/1908.11025" target="_blank">05. Parsing Line Segments</a></td>
+                                    <td>Graph Neural Networks</td>
+                                    <td>
+                                        <ul>
+                                            <li>Graph-based approach</li>
+                                            <li>Captures relationships</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            <li>Complex implementation</li>
+                                            <li>Expertise required</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="key-takeaways">
+                            <h3>Key Takeaways</h3>
+                            <ul>
+                                <li>CNN models show superior performance</li>
+                                <li>Cascade Mask R-CNN > Faster R-CNN</li>
+                                <li>Effective for complex multi-unit plans</li>
+                                <li>Multi-task approach improves performance</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Methodology</h2>
+                    <div class="content">
+                        <h3>Why Mask R-CNN?</h3>
+                        <p>Mask R-CNN was chosen for this project because:</p>
+                        <ul>
+                            <li>Combines object detection and instance segmentation</li>
+                            <li>Provides pixel-level accuracy for wall boundaries</li>
+                            <li>Can handle complex floorplan layouts</li>
+                            <li>Supports transfer learning with pre-trained models</li>
+                        </ul>
+
+                        <h3>How Mask R-CNN Works</h3>
+                        <p>Mask R-CNN is a two-stage object detection and instance segmentation framework that extends Faster R-CNN. The architecture consists of four main components working together:</p>
+
+                        <div class="result-item" style="max-width: 800px; margin: 20px auto;">
+                            <img src="../images/mask-r-cnn-framework-for-instance-segmentation-1.jpg" alt="Mask R-CNN Framework for Instance Segmentation">
+                            <p style="text-align: center; font-style: italic;">Mask R-CNN Framework for Instance Segmentation. Source: <a href="https://viso.ai/deep-learning/mask-r-cnn/" target="_blank">viso.ai</a></p>
+                        </div>
+                        
+                        <h4>Architecture Components</h4>
+                        <ol>
+                            <li><strong>Backbone Network</strong>
+                                <ul>
+                                    <li>Pre-trained CNN (e.g., ResNet-101)</li>
+                                    <li>Extracts features from input images</li>
+                                    <li>Generates feature maps at different scales</li>
+                                </ul>
+                            </li>
+                            <li><strong>Region Proposal Network (RPN)</strong>
+                                <ul>
+                                    <li>Uses anchor boxes at multiple scales</li>
+                                    <li>Generates potential object regions (RoIs)</li>
+                                    <li>Predicts objectness scores</li>
+                                </ul>
+                            </li>
+                            <li><strong>RoIAlign Layer</strong>
+                                <ul>
+                                    <li>Maintains precise spatial locations</li>
+                                    <li>Eliminates quantization errors</li>
+                                    <li>Extracts fixed-size feature maps</li>
+                                </ul>
+                            </li>
+                            <li><strong>Mask Branch</strong>
+                                <ul>
+                                    <li>Uses a small Fully Convolutional Network (FCN)</li>
+                                    <li>Predicts pixel-level segmentation masks</li>
+                                    <li>Works in parallel with classification and bounding box regression</li>
+                                </ul>
+                            </li>
+                        </ol>
+
+                        <h4>Process Flow</h4>
+                        <ol>
+                            <li>The backbone network processes the input image and extracts features</li>
+                            <li>RPN generates potential object regions using anchor boxes</li>
+                            <li>RoIAlign processes these regions to extract fixed-size feature maps</li>
+                            <li>The mask branch generates pixel-level segmentation masks</li>
+                            <li>Final output includes class labels, bounding boxes, and segmentation masks</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <div class="margin-note" style="margin: 20px auto; max-width: 800px;">
+                    <strong>Dataset Advantages:</strong>
+                    <ul>
+                        <li>High-quality annotations</li>
+                        <li>Large and diverse collection</li>
+                        <li>Precise polygon-based segmentation</li>
+                    </ul>
+                </div>
+
+                <section class="section">
+                    <h2>Dataset</h2>
+                    <div class="content">
+                        <p>The project uses the Floor Plan Segmentation dataset from Roboflow.</p>
+                        
+                        <h3>Dataset Details</h3>
+                        <ul>
+                            <li>Source: <a href="https://universe.roboflow.com/floor-plan-segmentation/new_segmentation_plan" target="_blank">Roboflow Floor Plan Segmentation Dataset</a></li>
+                            <li>Size: Approximately 5000 images available for training</li>
+                            <li>License: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International</a></li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Code Implementation</h2>
+                    <div class="content">
+                        <h3>Key Code Files</h3>
+                        <div class="code-files">
+                            <div class="code-file">
+                                <div class="code-header" onclick="toggleCode('floorplan_training')">
+                                    <h4>1. Floorplan Training Script (floorplan_training.py)</h4>
+                                    <button class="copy-button" onclick="copyCode('floorplan_training')">Copy</button>
+                                </div>
+                                <div class="code-content" id="floorplan_training">
+                                    <pre class="code-block"><code>import os
+import xml.etree.ElementTree as eT
+
+import numpy as np
+from skimage.draw import polygon
+
+import mrcnn.config
+import mrcnn.model
+import mrcnn.utils
+
+
+# Extract polygons
+def extract_polygons(filename):
+    tree = eT.parse(filename)
+    root = tree.getroot()
+
+    polygons = []
+    for obj in root.findall('.//object'):
+        polyp = obj.find('polygon')
+        if polyp is not None:
+            x_points = []
+            y_points = []
+            for pt in polyp.findall('.//pt'):
+                x_points.append(float(pt.find('x').text))
+                y_points.append(float(pt.find('y').text))
+
+            all_points_x = np.array(x_points)
+            all_points_y = np.array(y_points)
+            polygons.append({
+                'all_points_x': all_points_x,
+                'all_points_y': all_points_y
+            })
+
+    width = int(root.find('.//size/width').text)
+    height = int(root.find('.//size/height').text)
+
+    return polygons, width, height
+
+# Dataset class
+class FloorplanDataset(mrcnn.utils.Dataset):
+
+    def load_dataset(self, dataset_dir):
+        self.add_class("dataset", 1, "Wall")
+
+        images_dir = dataset_dir + '/images/'
+        annotations_dir = dataset_dir + '/annots/'
+
+        for i, filename in enumerate(os.listdir(images_dir)):
+            image_id = filename[:-4]
+            img_path = os.path.join(images_dir, filename)
+            ann_path = os.path.join(annotations_dir, image_id + '.xml')
+
+            self.add_image('dataset', image_id=image_id, path=img_path, annotation=ann_path)
+
+    def load_mask(self, image_id):
+        info = self.image_info[image_id]
+        path = info['annotation']
+        polygons, w, h = self.extract_polygons(path)
+        masks = np.zeros([h, w, len(polygons)], dtype=np.uint8)
+
+        class_ids = []
+        for i, poly in enumerate(polygons):
+            all_points_x = [float(poly[f'x{j + 1}']) for j in range(len(poly) // 2)]
+            all_points_y = [float(poly[f'y{j + 1}']) for j in range(len(poly) // 2)]
+
+            rr, cc = polygon(all_points_y, all_points_x, (h, w))
+            masks[rr, cc, i] = 1
+
+            class_name = "Wall"
+            class_id = self.class_names.index(class_name) if class_name in self.class_names else -1
+            class_ids.append(class_id)
+
+        return masks, np.array(class_ids, dtype=np.int32)
+
+    # A helper method to extract the polygon coordinates from the annotation file
+    def extract_polygons(self, filename):
+        tree = eT.parse(filename)
+        root = tree.getroot()
+
+        polygons = []
+        for polygon in root.findall('.//polygon'):
+            poly = {}
+            for i in range(1, 6):  # x1, y1, x2, y2, etc.
+                x_tag = f'x{i}'
+                y_tag = f'y{i}'
+                x_elem = polygon.find(x_tag)
+                y_elem = polygon.find(y_tag)
+                if x_elem is not None and y_elem is not None:
+                    poly[x_tag] = x_elem.text
+                    poly[y_tag] = y_elem.text
+            polygons.append(poly)
+
+        width = int(root.find('.//size/width').text)
+        height = int(root.find('.//size/height').text)
+        return polygons, width, height
+
+
+# Configuration class
+class FloorplanConfig(mrcnn.config.Config):
+    NAME = "floorplan_cfg"
+    GPU_COUNT = 1
+    IMAGES_PER_GPU = 1
+    NUM_CLASSES = 2
+    STEPS_PER_EPOCH = 250
+
+# Train model
+train_dataset = FloorplanDataset()
+train_dataset.load_dataset(dataset_dir='floorplan-train')
+train_dataset.prepare()
+
+validation_dataset = FloorplanDataset()
+validation_dataset.load_dataset(dataset_dir='floorplan-valid')
+validation_dataset.prepare()
+
+# Model configuration
+floorplan_config = FloorplanConfig()
+
+# Build Mask R-CNN model
+model = mrcnn.model.MaskRCNN(mode='training',
+                             model_dir='./',
+                             config=floorplan_config)
+
+model.load_weights(filepath='mask_rcnn_coco.h5',
+                   by_name=True,
+                   exclude=["mrcnn_class_logits", "mrcnn_bbox_fc", "mrcnn_bbox", "mrcnn_mask"])
+
+# Train model
+model.train(train_dataset=train_dataset,
+            val_dataset=validation_dataset,
+            learning_rate=floorplan_config.LEARNING_RATE,
+            epochs=20,
+            layers='heads')
+
+model_path = 'floorplan_mask_rcnn_trained_poly.h5'
+model.keras_model.save_weights(model_path)</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="code-file">
+                                <div class="code-header" onclick="toggleCode('floorplan_prediction')">
+                                    <h4>2. Floorplan Prediction Script (floorplan_prediction.py)</h4>
+                                    <button class="copy-button" onclick="copyCode('floorplan_prediction')">Copy</button>
+                                </div>
+                                <div class="code-content" id="floorplan_prediction">
+                                    <pre class="code-block"><code>import os
+
+import cv2
+
+import mrcnn.config
+import mrcnn.model
+import mrcnn.visualize
+
+CLASS_NAMES = ['BG', 'Wall']
+
+class SimpleConfig(mrcnn.config.Config):
+    # Give the configuration a recognizable name
+    NAME = "coco_inference"
+    
+    # set the number of GPUs to use along with the number of images per GPU
+    GPU_COUNT = 1
+    IMAGES_PER_GPU = 1
+    NUM_CLASSES = 2
+
+# Initialize the Mask R-CNN model for inference and then load the weights.
+# This step builds the Keras model architecture.
+model = mrcnn.model.MaskRCNN(mode="inference", 
+                             config=SimpleConfig(),
+                             model_dir=os.getcwd())
+
+# Load the weights into the model.
+model.load_weights(filepath="floorplan_mask_rcnn_trained_poly_1500images_2epochs.h5",
+                   by_name=True)
+
+# load the input image, convert it from BGR to RGB channel
+image = cv2.imread("../static/test_images/huggingface-automated-floor-plan-digitalization-04.png")
+image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+# Perform a forward pass of the network to obtain the results
+r = model.detect([image], verbose=0)
+
+# Get the results for the first image.
+r = r[0]
+
+if len(r['rois']) > 0:
+    print(f"Detected {len(r['rois'])} objects")
+
+    # Visualize the detected objects.
+    mrcnn.visualize.display_instances(image=image,
+                                  boxes=r['rois'],
+                                  masks=r['masks'],
+                                  class_ids=r['class_ids'],
+                                  class_names=CLASS_NAMES,
+                                  scores=r['scores'])
+else:
+    print("No objects detected.")</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            
+                <section class="section">
+                    <h2>First Experimental Results</h2>
+                    <div class="content">
+                        <div class="experiment-details">
+                            <h3>Training Details</h3>
+                            <div class="training-notes">
+                                <p><strong>First experimental training:</strong></p>
+                                <ul>
+                                    <li>Training set: 1000 images (out of 4986 available)</li>
+                                    <li>Validation set: 100 images (out of 154 available)</li>
+                                    <li>STEPS_PER_EPOCH = 1500</li>
+                                    <li>Trained for 2 epochs (target: 20 epochs)</li>
+                                    <li>Final loss: ~2.8 (target: ~1)</li>
+                                </ul>
+                                <p class="note">Results are promising considering that there are 5 times more available images to train and only 2 epochs are used for the below results.</p>
+                            </div>
+
+                            <h3>Results Visualization</h3>
+                            <div class="results-grid">
+                                <div class="result-item">
+                                    <h4>Original Image</h4>
+                                    <img src="../images/original.jpg" alt="Original floorplan image">
+                                </div>
+                                <div class="result-item">
+                                    <h4>Bounding Boxes</h4>
+                                    <img src="../images/bounding-boxes.png" alt="Floorplan with bounding boxes">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <script>
+                    function toggleCode(id) {
+                        const content = document.getElementById(id);
+                        content.classList.toggle('active');
+                    }
+
+                    function copyCode(id) {
+                        const codeBlock = document.getElementById(id).querySelector('code');
+                        const textArea = document.createElement('textarea');
+                        textArea.value = codeBlock.textContent;
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        
+                        // Show copied notification
+                        const button = event.target;
+                        const originalText = button.textContent;
+                        button.textContent = 'Copied!';
+                        setTimeout(() => {
+                            button.textContent = originalText;
+                        }, 2000);
+                    }
+                </script>
+
+                <section class="section">
+                    <h2>Additional Resources</h2>
+                    <div class="content">
+                        <ul>
+                            <li>
+                                <a href="https://github.com/cansik/architectural-floor-plan" target="_blank">Automatic analysis and simplification of architectural floor plans (Kotlin)</a>
+                                <p>A Kotlin-based tool that analyzes and simplifies architectural floor plans by detecting and extracting structural elements.</p>
+                            </li>
+                            <li>
+                                <a href="https://github.com/dwnsingh/Object-Detection-in-Floor-Plan-Images" target="_blank">Example model training</a>
+                                <p>A comprehensive example demonstrating how to train object detection models specifically for floor plan images.</p>
+                            </li>
+                            <li>
+                                <a href="https://github.com/AarohiSingla/Mask-RCNN-on-Custom-Dataset-2classes-" target="_blank">Mask R-CNN implementation example</a>
+                                <p>A practical implementation of Mask R-CNN for custom datasets with two classes, providing a clear example of the model's application.</p>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+
+            <div class="page-number">Page 1</div>
+        </div>
+    </div>
+</body>
+</html> 
