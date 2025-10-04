@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Research Topic - Wall Segmentation in Floorplans (Geometric Approach)</title>
+    <title>Research Project - Wall Segmentation in Floorplans (Geometric Approach)</title>
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="topic-styles.css">
     <script src="../projects-data.js"></script>
@@ -11,9 +11,9 @@
 <body>
     <div class="notebook">
         <div class="notebook-page">
-            <a href="../index.html" class="back-link">← Back to Topics</a>
+            <a href="../index.html" class="back-link">← Back to Projects</a>
             
-            <div class="topic-header" id="topic-header">
+            <div class="project-header" id="project-header">
                 <!-- Header content will be loaded dynamically -->
             </div>
 
@@ -123,15 +123,15 @@
             const projectData = getProjectData('wall-segmentation-geometric');
             
             // Populate header with description before tags and date
-            const headerElement = document.getElementById('topic-header');
+            const headerElement = document.getElementById('project-header');
             headerElement.innerHTML = `
                 <h1>${projectData.title}</h1>
-                <div class="topic-description" style="margin: 20px 0;">
+                <div class="project-description" style="margin: 20px 0;">
                     <p>${projectData.description}</p>
                 </div>
-                <div class="topic-meta">
+                <div class="project-meta">
                     <p>${projectData.dateLabel}: ${projectData.date}</p>
-                    <div class="topic-tags">
+                    <div class="project-tags">
                         ${projectData.tags.map(tag => `<span class="tag">${tag}</span>`).join('\n                        ')}
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 /* Index page specific styles */
-.topic-card {
+.project-card {
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -8,11 +8,11 @@
     transition: transform 0.2s;
 }
 
-.topic-card:hover {
+.project-card:hover {
     transform: translateY(-5px);
 }
 
-.topic-image {
+.project-image {
     width: 100%;
     overflow: hidden;
     border-radius: 8px;
@@ -23,44 +23,44 @@
     background-color: #f5f5f5;
 }
 
-.topic-image img {
+.project-image img {
     width: 100%;
     height: auto;
     border-radius: 8px;
     display: block;
 }
 
-.topic-header {
+.project-header {
     display: flex;
     flex-direction: column;
     gap: 10px;
     margin-bottom: 15px;
 }
 
-.topic-title-row {
+.project-title-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
 }
 
-.topic-title {
+.project-title {
     font-size: 1.5em;
     color: #2c3e50;
     margin: 0;
 }
 
-.topic-meta {
+.project-meta {
     color: #7f8c8d;
     font-size: 0.9em;
 }
 
-.topic-description {
+.project-description {
     color: #34495e;
     line-height: 1.6;
 }
 
-.topic-tags {
+.project-tags {
     display: flex;
     gap: 10px;
     margin-top: 15px;
