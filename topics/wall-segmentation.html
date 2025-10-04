@@ -145,72 +145,23 @@
                 </section>
 
                 <section class="section">
-                    <h2>My Approach</h2>
+                    <h2>Mask R-CNN</h2>
                     <div class="content">
-                        <h3>Why Mask R-CNN?</h3>
-                        <p>I chose Mask R-CNN because it:</p>
-                        <ul>
-                            <li>Combines object detection and instance segmentation in one model</li>
-                            <li>Provides pixel-level accuracy for wall boundaries</li>
-                            <li>Handles complex floorplan layouts well</li>
-                            <li>Can use pre-trained models (transfer learning)</li>
-                        </ul>
-
-                        <h3>How It Works</h3>
-                        <p>Mask R-CNN is a two-stage framework with four main components:</p>
+                        <p>I chose Mask R-CNN because it combines object detection and instance segmentation in one model, providing pixel-level accuracy for wall boundaries while handling complex floorplan layouts well.</p>
 
                         <div class="result-item" style="max-width: 800px; margin: 20px auto;">
                             <img src="../images/mask-r-cnn-framework-for-instance-segmentation-1.jpg" alt="Mask R-CNN Framework for Instance Segmentation">
                             <p style="text-align: center; font-style: italic;">Mask R-CNN Framework for Instance Segmentation. Source: <a href="https://viso.ai/deep-learning/mask-r-cnn/" target="_blank">viso.ai</a> (https://viso.ai/deep-learning/mask-r-cnn/)</p>
                         </div>
-                        
-                        <h4>Architecture Components</h4>
-                        <ol>
-                            <li><strong>Backbone Network</strong>
-                                <ul>
-                                    <li>Pre-trained CNN (e.g., ResNet-101)</li>
-                                    <li>Extracts features from input images</li>
-                                    <li>Generates feature maps at different scales</li>
-                                </ul>
-                            </li>
-                            <li><strong>Region Proposal Network (RPN)</strong>
-                                <ul>
-                                    <li>Uses anchor boxes at multiple scales</li>
-                                    <li>Generates potential object regions (RoIs)</li>
-                                    <li>Predicts objectness scores</li>
-                                </ul>
-                            </li>
-                            <li><strong>RoIAlign Layer</strong>
-                                <ul>
-                                    <li>Maintains precise spatial locations</li>
-                                    <li>Eliminates quantization errors</li>
-                                    <li>Extracts fixed-size feature maps</li>
-                                </ul>
-                            </li>
-                            <li><strong>Mask Branch</strong>
-                                <ul>
-                                    <li>Uses a small Fully Convolutional Network (FCN)</li>
-                                    <li>Predicts pixel-level segmentation masks</li>
-                                    <li>Works in parallel with classification and bounding box regression</li>
-                                </ul>
-                            </li>
-                        </ol>
 
-                        <h4>Process Flow</h4>
-                        <ol>
-                            <li>The backbone network processes the input image and extracts features</li>
-                            <li>RPN generates potential object regions using anchor boxes</li>
-                            <li>RoIAlign processes these regions to extract fixed-size feature maps</li>
-                            <li>The mask branch generates pixel-level segmentation masks</li>
-                            <li>Final output includes class labels, bounding boxes, and segmentation masks</li>
-                        </ol>
+                        <p>The architecture uses a backbone network (ResNet-101) to extract features, a Region Proposal Network to identify potential wall regions, and a mask branch to generate pixel-level segmentation masks. This allows it to accurately detect and segment individual wall instances even in complex architectural layouts.</p>
                     </div>
                 </section>
 
                 <section class="section">
                     <h2>Training Data</h2>
                     <div class="content">
-                        <p>I used the <a href="https://universe.roboflow.com/floor-plan-segmentation/new_segmentation_plan" target="_blank">Floor Plan Segmentation dataset from Roboflow</a> with about 5,000 floorplan images with high-quality polygon annotations. The dataset is diverse and covers various architectural styles.</p>
+                        <p>I used the <a href="https://universe.roboflow.com/floor-plan-segmentation/new_segmentation_plan" target="_blank">Floor Plan Segmentation dataset from Roboflow</a> (https://universe.roboflow.com/floor-plan-segmentation/new_segmentation_plan) with about 5,000 floorplan images with high-quality polygon annotations. The dataset is diverse and covers various architectural styles.</p>
                     </div>
                 </section>
 
