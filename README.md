@@ -1,4 +1,4 @@
-# Research Notebook
+# Research Portfolio
 
 A static website template for documenting research projects in a notebook-style format.
 
@@ -14,7 +14,7 @@ A static website template for documenting research projects in a notebook-style 
 ## Project Structure
 
 ```
-research-notebook/
+research-portfolio/
 ├── index.html          # Main content file
 ├── style.css           # Stylesheet
 ├── assets/
