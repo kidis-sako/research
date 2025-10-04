@@ -56,11 +56,19 @@
         }
 
         .tag {
-            background: #e0f2f1;
-            color: #00796b;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.8em;
+            display: inline-block;
+            padding: 4px 8px;
+            background-color: #e0f7fa;
+            border: 1px solid #b2ebf2;
+            border-radius: 12px;
+            font-size: 0.9em;
+            color: #4a4a4a;
+            text-decoration: none;
+            transition: background-color 0.2s ease;
+        }
+
+        .tag:hover {
+            background-color: #b2ebf2;
         }
 
         .key-features {
@@ -137,6 +145,14 @@
             margin-bottom: 10px;
             color: #2c3e50;
         }
+
+        .experiment-details {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin: 20px 0;
+        }
     </style>
 </head>
 <body>
@@ -212,8 +228,8 @@
                                         <div class="topic-tags">
                                             <span class="tag">Computer Vision</span>
                                             <span class="tag">Motion Detection</span>
-                                            <span class="tag">Background Subtraction</span>
                                             <span class="tag">OpenCV</span>
+                                            <span class="tag">Bg Subtraction</span>
                                         </div>
                                     </div>
                                 </div>
