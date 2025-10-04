@@ -28,47 +28,48 @@
 
             <div class="handwritten">
                 <section class="section">
-                    <h2>Overview</h2>
+                    <h2>What I Did</h2>
                     <div class="content">
-                        <p>This project explores different background subtraction algorithms for detecting motion in videos. I tested five OpenCV algorithms (GMG, MOG, MOG2, KNN, CNT) and implemented a custom temporal median filter approach. The goal was to see how each algorithm performs on different types of videos such as car traffic, beach scenes with people walking, and other scenarios.</p>
+                        <p>I wanted to see how different algorithms detect motion in videos. I tested five OpenCV background subtraction methods (GMG, MOG, MOG2, KNN, CNT) and built my own temporal median filter. I tried them on car traffic and beach scenes to see what works best.</p>
                     </div>
                 </section>
 
                 <section class="section">
-                    <h2>Algorithms Tested</h2>
+                    <h2>How It Works</h2>
                     <div class="content">
                         <h3>OpenCV Background Subtractors</h3>
-                        <p>I tested five built-in OpenCV algorithms:</p>
+                        <p>I tested five built-in algorithms:</p>
                         <ul>
-                            <li><strong>GMG</strong> - Gaussian Mixture-based, needs initialization frames</li>
+                            <li><strong>GMG</strong> - Gaussian Mixture-based, needs some frames to warm up</li>
                             <li><strong>MOG</strong> - Mixture of Gaussians</li>
-                            <li><strong>MOG2</strong> - Improved MOG with shadow detection (performed best overall)</li>
-                            <li><strong>KNN</strong> - K-Nearest Neighbors based</li>
-                            <li><strong>CNT</strong> - Counting-based, fastest processing</li>
+                            <li><strong>MOG2</strong> - Improved version with shadow detection (worked best for me)</li>
+                            <li><strong>KNN</strong> - K-Nearest Neighbors approach</li>
+                            <li><strong>CNT</strong> - Counting-based, super fast</li>
                         </ul>
 
-                        <h3>Temporal Median Filter approach</h3>
+                        <h3>My Temporal Median Filter</h3>
+                        <p>I also built a simple approach from scratch:</p>
                         <ol>
-                            <li>Sample 25 random frames from the video</li>
-                            <li>Calculate the median of all frames to create a background model</li>
-                            <li>For each frame, compute the difference from the background</li>
-                            <li>Apply Otsu's thresholding to detect moving objects</li>
+                            <li>Grab 25 random frames from the video</li>
+                            <li>Calculate the median to create a background model</li>
+                            <li>Compare each frame to this background</li>
+                            <li>Use Otsu's thresholding to find moving objects</li>
                         </ol>
 
-                        <h3>Post-Processing</h3>
-                        <p>Applied morphological operations to clean up the detection results:</p>
+                        <h3>Cleaning Up Results</h3>
+                        <p>Mrphological operations to make the detections cleaner:</p>
                         <ul>
-                            <li><strong>Dilation</strong> - Fill small gaps</li>
-                            <li><strong>Opening</strong> - Remove noise</li>
-                            <li><strong>Closing</strong> - Fill holes in detected objects</li>
+                            <li><strong>Dilation</strong> - fills small gaps</li>
+                            <li><strong>Opening</strong> - removes noise</li>
+                            <li><strong>Closing</strong> - fills holes in detected objects</li>
                         </ul>
                     </div>
                 </section>
 
                 <section class="section">
-                    <h2>Code Implementation</h2>
+                    <h2>The Code</h2>
                     <div class="content">
-                        <h3>Key Code Files</h3>
+                        <h3>Implementation</h3>
                         <div class="code-files">
                             <div class="code-file">
                                 <div class="code-header" onclick="toggleCode('bg_subtractor')">
@@ -249,42 +250,36 @@ cv2.destroyAllWindows()</code></pre>
                 <section class="section">
                     <h2>Results</h2>
                     <div class="content">
-                        <h3>Background Subtraction Algorithms - Car Traffic</h3>
+                        <h3>Car Traffic Scene</h3>
                         <div class="results-gallery">
                             <div class="result-item">
-                                <h4>Original vs Motion Detection Output</h4>
+                                <h4>Original vs Motion Detection</h4>
                                 <img src="../images/cars-comparison-video-1-min.gif" alt="Comparison showing original video and motion detection output">
-                                <p>Side-by-side comparison of original car traffic video and motion detection results using background subtraction algorithms</p>
+                                <p>Side-by-side comparison showing how the algorithm detects moving cars</p>
                             </div>
                         </div>
 
-                        <h3>Temporal Median Filter - Beach Scene</h3>
+                        <h3>Beach Scene with Temporal Median Filter</h3>
                         <div class="results-gallery">
                             <div class="result-item">
-                                <h4>Bg Model (Median Frame)</h4>
+                                <h4>Background Model</h4>
                                 <img src="../images/model-median-frame.jpg" alt="Median frame background model">
-                                <p>Background model created from 25 randomly sampled frames</p>
+                                <p>Background model from 25 random frames</p>
                             </div>
                             <div class="result-item">
                                 <h4>Input Video</h4>
                                 <img src="../images/beach-input.gif" alt="Beach input video with person walking">
-                                <p>Original beach video with person walking</p>
+                                <p>Original beach video</p>
                             </div>
                             <div class="result-item">
-                                <h4>Motion Detection Output (slowed down)</h4>
+                                <h4>Motion Detection Output</h4>
                                 <img src="../images/beach-temporal-median-output.gif" alt="Temporal median filter motion detection output">
-                                <p>Detected motion using temporal median filter with Otsu's thresholding</p>
+                                <p>Detected motion (slowed down for clarity)</p>
                             </div>
                         </div>
 
-                        <div class="algorithm-comparison">
-                            <h4>What I Found</h4>
-                            <ul>
-                                <li><strong>MOG2</strong> worked best overall - good balance of speed and accuracy, has built-in shadow detection</li>
-                                <li><strong>CNT</strong> was the fastest but less accurate</li>
-                                <li><strong>KNN</strong> handled complex scenes well but slower</li>
-                                <li><strong>Temporal Median Filter</strong> simple and effective for static backgrounds</li>
-                            </ul>
+                        <div class="margin-note">
+                            <strong>What I Found:</strong> MOG2 worked best overall: good balance of speed and accuracy with built-in shadow detection. CNT was fastest but less accurate. KNN handled complex scenes well but slower. The temporal median filter is simple and effective for static backgrounds.
                         </div>
                     </div>
                 </section>
@@ -294,28 +289,28 @@ cv2.destroyAllWindows()</code></pre>
                     <div class="content">
                         <ul>
                             <li>Different algorithms work better for different scenarios</li>
-                            <li>Morphological operations (dilation, opening, closing) really help clean up the results</li>
-                            <li>MOG2's shadow detection made a big difference in outdoor videos</li>
-                            <li>The temporal median filter is a simple alternative that works well for static backgrounds</li>
+                            <li>Morphological operations make a huge difference in cleaning up detections</li>
+                            <li>MOG2's shadow detection really helps with outdoor scenes</li>
+                            <li>The temporal median filter is great when you have a static background</li>
                         </ul>
                     </div>
                 </section>
 
                 <section class="section">
-                    <h2>Additional Resources</h2>
+                    <h2>Resources</h2>
                     <div class="content">
                         <ul>
                             <li>
-                                <a href="https://docs.opencv.org/4.x/d1/dc5/tutorial_background_subtraction.html" target="_blank">OpenCV Background Subtraction Tutorial</a> (https://docs.opencv.org/4.x/d1/dc5/tutorial_background_subtraction.html)
-                                <p>Official OpenCV documentation covering the implementation and usage of various background subtraction algorithms.</p>
+                                <a href="https://docs.opencv.org/4.x/d1/dc5/tutorial_background_subtraction.html" target="_blank">OpenCV Background Subtraction Tutorial</a>
+                                <p>Official docs on how to use these algorithms</p>
                             </li>
                             <li>
-                                <a href="https://docs.opencv.org/3.4/d7/df3/group__bgsegm.html" target="_blank">OpenCV Background Segmentation Module</a> (https://docs.opencv.org/3.4/d7/df3/group__bgsegm.html)
-                                <p>Detailed API reference for the background segmentation module including GMG, MOG, and CNT algorithms.</p>
+                                <a href="https://docs.opencv.org/3.4/d7/df3/group__bgsegm.html" target="_blank">OpenCV Background Segmentation Module</a>
+                                <p>API reference for GMG, MOG, and CNT</p>
                             </li>
                             <li>
-                                <a href="https://www.sciencedirect.com/science/article/abs/pii/S0031320313003294" target="_blank">Improved Adaptive Gaussian Mixture Model (MOG2)</a> (https://www.sciencedirect.com/science/article/abs/pii/S0031320313003294)
-                                <p>Research paper describing the improvements in MOG2 over the original MOG algorithm.</p>
+                                <a href="https://www.sciencedirect.com/science/article/abs/pii/S0031320313003294" target="_blank">Improved Adaptive Gaussian Mixture Model (MOG2)</a>
+                                <p>Paper on MOG2 improvements</p>
                             </li>
                         </ul>
                     </div>

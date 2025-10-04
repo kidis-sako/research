@@ -26,74 +26,36 @@
 
             <div class="handwritten">
                 <section class="section">
-                    <h2>Abstract</h2>
+                    <h2>A Different Approach</h2>
                     <div class="content">
-                        <p>This research presents a geometric approach for wall segmentation in floorplan images using traditional computer vision techniques. The method leverages contour detection, corner detection, and morphological operations to accurately identify and extract wall structures. Unlike deep learning approaches, this method provides a more interpretable and computationally efficient solution for wall segmentation tasks.</p>
-                    </div>
-                </section>
+                        <p>While deep learning methods like Mask R-CNN work great, they need lots of training data and computational power. I wanted to try something simpler: using traditional computer vision techniques based on geometry.</p>
+                        
+                        <p>The idea is straightforward: floorplans have predictable geometric properties. Walls are continuous lines with consistent thickness, rooms are bounded by straight walls, and everything follows a grid-like structure. Why not use these properties directly?</p>
 
-                <section class="section">
-                    <h2>Motivation</h2>
-                    <div class="content">
-                        <p>While deep learning approaches like Mask R-CNN have shown impressive results in wall segmentation, they often require large amounts of training data and significant computational resources. The geometric approach offers several advantages:</p>
+                        <h3>Why This Works</h3>
                         <ul>
-                            <li>No need for training data or model training</li>
-                            <li>Faster processing time</li>
-                            <li>More interpretable results</li>
-                            <li>Easier to debug and modify</li>
-                            <li>Works well with clean floorplan images</li>
+                            <li>No training data needed</li>
+                            <li>Much faster processing</li>
+                            <li>Easy to understand and debug</li>
+                            <li>Works well for clean, well-drawn floorplans</li>
                         </ul>
-                    </div>
-                </section>
 
-                <section class="section">
-                    <h2>Key Insight</h2>
-                    <div class="content">
-                        <p>The geometric approach to wall segmentation is particularly effective because it leverages the inherent structural properties of floorplans:</p>
-                        <ul>
-                            <li>Walls are typically represented by continuous lines with consistent thickness</li>
-                            <li>Rooms are usually bounded by straight walls meeting at right angles</li>
-                            <li>Floorplans often follow a grid-like structure with clear boundaries</li>
-                            <li>The spatial relationships between walls and rooms are geometrically well-defined</li>
-                        </ul>
                         <div class="margin-note">
-                            <strong>Note:</strong> This approach works best when the input floorplan maintains these geometric properties, making it ideal for clean, well-drawn architectural plans.
+                            <strong>Note:</strong> This approach works best with clean, well-drawn architectural plans that follow standard geometric conventions.
                         </div>
                     </div>
                 </section>
 
                 <section class="section">
-                    <h2>Methodology</h2>
+                    <h2>How It Works</h2>
                     <div class="content">
-                        <h3>Processing Pipeline</h3>
-                        <p>The wall segmentation process follows these key steps:</p>
+                        <p>The process has four main steps:</p>
                         <ol>
-                            <li><strong>Image Preprocessing</strong>
-                                <ul>
-                                    <li>Binarization of the input image</li>
-                                    <li>Inversion for better contour detection</li>
-                                </ul>
-                            </li>
-                            <li><strong>Contour Processing</strong>
-                                <ul>
-                                    <li>Removal of small contours based on area threshold</li>
-                                    <li>Identification of the largest contour (outer boundary)</li>
-                                </ul>
-                            </li>
-                            <li><strong>Corner Detection</strong>
-                                <ul>
-                                    <li>Harris corner detection to identify room corners</li>
-                                    <li>Line drawing to close gaps between corners</li>
-                                </ul>
-                            </li>
-                            <li><strong>Wall Extraction</strong>
-                                <ul>
-                                    <li>Morphological operations to ensure uniform wall thickness</li>
-                                    <li>Connected component analysis for room separation</li>
-                                </ul>
-                            </li>
+                            <li><strong>Preprocessing</strong> - Convert the image to binary (black and white) and invert it for better contour detection</li>
+                            <li><strong>Contour Processing</strong> - Remove small noise contours and identify the outer boundary</li>
+                            <li><strong>Corner Detection</strong> - Use Harris corner detection to find room corners, then draw lines to close gaps</li>
+                            <li><strong>Wall Extraction</strong> - Apply morphological operations to ensure uniform wall thickness and separate rooms</li>
                         </ol>
-
                     </div>
                 </section>
 
@@ -276,29 +238,22 @@ cv2.destroyAllWindows()</code></pre>
                         </div>
 
                         <div class="margin-note">
-                            <strong>Performance Notes:</strong>
-                            <ul>
-                                <li>Works best with clean floorplans</li>
-                            </ul>
+                            <strong>Note:</strong> Works best with clean, well-drawn floorplans.
                         </div>
                     </div>
                 </section>
 
                 <section class="section">
-                    <h2>Limitations and Future Work</h2>
+                    <h2>Limitations & Next Steps</h2>
                     <div class="content">
-                        <h3>Current Limitations</h3>
+                        <p>This approach works well for clean floorplans, but it has some limitations:</p>
                         <ul>
                             <li>Sensitive to image quality and noise</li>
-                            <li>May struggle with complex architectural elements</li>
-                            <li>Limited ability to handle overlapping or ambiguous wall structures</li>
+                            <li>Struggles with very complex architectural elements</li>
+                            <li>Can't handle overlapping or ambiguous wall structures well</li>
                         </ul>
 
-                        <h3>Future Improvements</h3>
-                        <ul>
-                            <li>Integration with deep learning for hybrid approach - see <a href="wall-segmentation.html">Mask R-CNN implementation</a></li>
-                            <li>Support for curved walls and non-rectangular rooms</li>
-                        </ul>
+                        <p>For more complex cases, combining this with deep learning could work better check out my <a href="wall-segmentation.html">Mask R-CNN implementation</a> for comparison.</p>
                     </div>
                 </section>
             </div>

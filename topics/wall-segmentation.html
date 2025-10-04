@@ -27,24 +27,12 @@
 
             <div class="handwritten">
                 <section class="section">
-                    <h2>Abstract</h2>
+                    <h2>The Challenge</h2>
                     <div class="content">
-                        <p>This research presents a Mask R-CNN-based approach for accurate wall segmentation in floorplan images. The project leverages the instance segmentation capabilities of Mask R-CNN to address the challenges of wall detection and extraction in complex architectural layouts. By utilizing a pre-trained Mask R-CNN model and fine-tuning it on a specialized floorplan dataset, we achieve precise pixel-level segmentation of wall structures, enabling improved accuracy in architectural analysis and 3D reconstruction tasks.</p>
-                    </div>
-                </section>
+                        <p>Identifying walls in floorplan images might sound simple, but it's actually quite tricky. Floorplans have overlapping elements, different wall thicknesses, furniture, doors, and various architectural styles, which make automatic wall detection challenging.</p>
+                        
+                        <p>I used Mask R-CNN to tackle this problem. It can identify and segment objects at the pixel level, which is exactly what's needed for accurate wall detection.</p>
 
-                <section class="section">
-                    <h2>Background</h2>
-                    <div class="content">
-                        <h3>Problem Statement</h3>
-                        <p>Accurate wall segmentation in floorplans is a critical task in architectural analysis and 3D reconstruction. Traditional computer vision approaches often struggle with the complex nature of floorplan images, which present unique challenges:</p>
-                        <ul>
-                            <li>Complex layouts with overlapping architectural elements</li>
-                            <li>Varied wall thicknesses and styles across different architectural designs</li>
-                            <li>Presence of furniture, doors, and other elements that can interfere with wall detection</li>
-                            <li>Need for pixel-level accuracy in wall boundary detection</li>
-                            <li>Handling of different architectural styles and notations</li>
-                        </ul>
                         <div class="margin-note">
                             <strong>Note:</strong> Accurate wall segmentation is fundamental for subsequent tasks like room detection and 3D reconstruction.
                         </div>
@@ -52,8 +40,9 @@
                 </section>
 
                 <section class="section">
-                    <h2>Literature Review</h2>
+                    <h2>What Others Have Done</h2>
                     <div class="content">
+                        <p>Before diving in, I looked at what other researchers had tried:</p>
                         <table class="literature-table">
                             <thead>
                                 <tr>
@@ -150,31 +139,31 @@
                         </table>
 
                         <div class="key-takeaways">
-                            <h3>Key Takeaways</h3>
+                            <h3>Takeaways</h3>
                             <ul>
-                                <li>CNN models show superior performance</li>
-                                <li>Cascade Mask R-CNN > Faster R-CNN</li>
-                                <li>Effective for complex multi-unit plans</li>
-                                <li>Multi-task approach improves performance</li>
+                                <li>CNN models work better than traditional approaches</li>
+                                <li>Mask R-CNN outperforms simpler detection methods</li>
+                                <li>These techniques handle complex multi-unit floorplans well</li>
+                                <li>Combining multiple tasks improves overall performance</li>
                             </ul>
                         </div>
                     </div>
                 </section>
 
                 <section class="section">
-                    <h2>Methodology</h2>
+                    <h2>My Approach</h2>
                     <div class="content">
                         <h3>Why Mask R-CNN?</h3>
-                        <p>Mask R-CNN was chosen for this project because:</p>
+                        <p>I chose Mask R-CNN because it:</p>
                         <ul>
-                            <li>Combines object detection and instance segmentation</li>
+                            <li>Combines object detection and instance segmentation in one model</li>
                             <li>Provides pixel-level accuracy for wall boundaries</li>
-                            <li>Can handle complex floorplan layouts</li>
-                            <li>Supports transfer learning with pre-trained models</li>
+                            <li>Handles complex floorplan layouts well</li>
+                            <li>Can use pre-trained models (transfer learning)</li>
                         </ul>
 
-                        <h3>How Mask R-CNN Works</h3>
-                        <p>Mask R-CNN is a two-stage object detection and instance segmentation framework that extends Faster R-CNN. The architecture consists of four main components working together:</p>
+                        <h3>How It Works</h3>
+                        <p>Mask R-CNN is a two-stage framework with four main components:</p>
 
                         <div class="result-item" style="max-width: 800px; margin: 20px auto;">
                             <img src="../images/mask-r-cnn-framework-for-instance-segmentation-1.jpg" alt="Mask R-CNN Framework for Instance Segmentation">
@@ -224,26 +213,10 @@
                     </div>
                 </section>
 
-                <div class="margin-note" style="margin: 20px auto; max-width: 800px;">
-                    <strong>Dataset Advantages:</strong>
-                    <ul>
-                        <li>High-quality annotations</li>
-                        <li>Large and diverse collection</li>
-                        <li>Precise polygon-based segmentation</li>
-                    </ul>
-                </div>
-
                 <section class="section">
-                    <h2>Dataset</h2>
+                    <h2>Training Data</h2>
                     <div class="content">
-                        <p>The project uses the Floor Plan Segmentation dataset from Roboflow.</p>
-                        
-                        <h3>Dataset Details</h3>
-                        <ul>
-                            <li>Source: <a href="https://universe.roboflow.com/floor-plan-segmentation/new_segmentation_plan" target="_blank">Roboflow Floor Plan Segmentation Dataset</a> (https://universe.roboflow.com/floor-plan-segmentation/new_segmentation_plan)</li>
-                            <li>Size: Approximately 5000 images available for training</li>
-                            <li>License: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International</a> (https://creativecommons.org/licenses/by/4.0/)</li>
-                        </ul>
+                        <p>I used the <a href="https://universe.roboflow.com/floor-plan-segmentation/new_segmentation_plan" target="_blank">Floor Plan Segmentation dataset from Roboflow</a> with about 5,000 floorplan images with high-quality polygon annotations. The dataset is diverse and covers various architectural styles.</p>
                     </div>
                 </section>
 
@@ -460,23 +433,22 @@ else:
                 </section>
 
                 <section class="section">
-                    <h2>First Experimental Results</h2>
+                    <h2>Early Experimental Results</h2>
                     <div class="content">
                         <div class="experiment-details">
-                            <h3>Training Details</h3>
+                            <h3>What I Trained</h3>
                             <div class="training-notes">
-                                <p><strong>First experimental training:</strong></p>
+                                <p>For this initial experiment, I used:</p>
                                 <ul>
-                                    <li>Training set: 1000 images (out of 4986 available)</li>
-                                    <li>Validation set: 100 images (out of 154 available)</li>
-                                    <li>STEPS_PER_EPOCH = 1500</li>
-                                    <li>Trained for 2 epochs (target: 20 epochs)</li>
-                                    <li>Final loss: ~2.8 (target: ~1)</li>
+                                    <li>1,000 training images (out of 4,986 available)</li>
+                                    <li>100 validation images</li>
+                                    <li>2 epochs (planning to train for 20 eventually)</li>
+                                    <li>Final loss: ~2.8 (target is ~1)</li>
                                 </ul>
-                                <p class="note">Results are promising considering that there are 5 times more available images to train and only 2 epochs are used for the below results.</p>
+                                <p class="note">These results are promising considering I only used 20% of the available data and just 2 epochs.</p>
                             </div>
 
-                            <h3>Results Visualization</h3>
+                            <h3>Results</h3>
                             <div class="results-grid">
                                 <div class="result-item">
                                     <h4>Original Image</h4>
