@@ -255,7 +255,7 @@
                     <p>${projectData.description}</p>
                 </div>
                 <div class="topic-meta">
-                    <p>Last update: ${projectData.date}</p>
+                    <p>${projectData.dateLabel}: ${projectData.date}</p>
                     <div class="topic-tags">
                         ${projectData.tags.map(tag => `<span class="tag">${tag}</span>`).join('\n                        ')}
                     </div>
