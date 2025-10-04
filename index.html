@@ -6,6 +6,7 @@
     <title>Kidis Sako - Research Portfolio</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="index-styles.css">
+    <script src="projects-data.js"></script>
 </head>
 <body>
     <div class="notebook">
@@ -21,114 +22,8 @@
             <section id="topics" class="section">
                 <h2>Research Topics</h2>
                 <div class="content">
-                    <div class="topic-grid">
-                        
-                        <!-- Ultrasound Bone Segmentation -->
-                        <a href="topics/ultrasound-bone-segmentation.html" class="topic-card-link">
-                            <article class="topic-card">
-                                <div class="topic-header">
-                                    <div class="topic-title-row">
-                                        <h3 class="topic-title">Ultrasound Bone Segmentation for Prosthesis Design</h3>
-                                    </div>
-                                    <div class="topic-meta">
-                                        <div class="topic-tags">
-                                            <span class="tag">Medical Imaging</span>
-                                            <span class="tag">nnU-Net</span>
-                                            <span class="tag">Ultrasound</span>
-                                            <span class="tag">Segmentation</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="topic-image">
-                                    <img src="images/kidis_leg_segmentation.gif" alt="Ultrasound bone segmentation">
-                                </div>
-                                <div class="topic-content">
-                                    <div class="topic-description">
-                                        <p>Using nnU-Net v2 to automatically segment bone and tissue from ultrasound scans for prosthesis design. This has the potential to revolutionize prosthetic fitting by making it faster, more accurate, and accessible to patients worldwide.</p>
-                                    </div>
-                                </div>
-                            </article>
-                        </a>
-                        
-                        <!-- Wall Segmentation Research -->
-                        <a href="topics/wall-segmentation.html" class="topic-card-link">
-                            <article class="topic-card">
-                                <div class="topic-header">
-                                    <div class="topic-title-row">
-                                        <h3 class="topic-title">Wall Segmentation in Floorplans using Mask R-CNN</h3>
-                                    </div>
-                                    <div class="topic-meta">
-                                        <div class="topic-tags">
-                                            <span class="tag">Computer Vision</span>
-                                            <span class="tag">Deep Learning</span>
-                                            <span class="tag">Mask R-CNN</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="topic-image">
-                                    <img src="images/bounding-boxes.png" alt="Wall segmentation bounding boxes">
-                                </div>
-                                <div class="topic-content">
-                                    <div class="topic-description">
-                                        <p>Training Mask R-CNN to detect and segment walls in floorplan images. AI approach for architectural image analysis.</p>
-                                    </div>
-                                </div>
-                            </article>
-                        </a>
-
-                        <!-- Wall Segmentation Geometric Approach -->
-                        <a href="topics/wall-segmentation-geometric.html" class="topic-card-link">
-                            <article class="topic-card">
-                                <div class="topic-header">
-                                    <div class="topic-title-row">
-                                        <h3 class="topic-title">Wall Segmentation in Floorplans using Geometric Approach</h3>
-                                    </div>
-                                    <div class="topic-meta">
-                                        <div class="topic-tags">
-                                            <span class="tag">Computer Vision</span>
-                                            <span class="tag">Geometric Processing</span>
-                                            <span class="tag">OpenCV</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="topic-image">
-                                    <img src="images/colored-room-separation.jpg" alt="Room segmentation">
-                                </div>
-                                <div class="topic-content">
-                                    <div class="topic-description">
-                                        <p>Using traditional computer vision techniques to segment walls in floorplans. Pure geometry and morphological operations.</p>
-                                    </div>
-                                </div>
-                            </article>
-                        </a>
-
-                        <!-- Motion Detection -->
-                        <a href="topics/motion-detection.html" class="topic-card-link">
-                            <article class="topic-card">
-                                <div class="topic-header">
-                                    <div class="topic-title-row">
-                                        <h3 class="topic-title">Motion Detection using Bg Subtraction Techniques</h3>
-                                    </div>
-                                    <div class="topic-meta">
-                                        <div class="topic-tags">
-                                            <span class="tag">Computer Vision</span>
-                                            <span class="tag">Motion Detection</span>
-                                            <span class="tag">OpenCV</span>
-                                            <span class="tag">Bg Subtraction</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="topic-image">
-                                    <img src="images/cars-comparison-video-1-min.gif" alt="Motion detection comparison">
-                                </div>
-                                <div class="topic-content">
-                                    <div class="topic-description">
-                                        <p>Testing different background subtraction algorithms for motion detection. Comparing them plus a custom temporal median filter.</p>
-                                    </div>
-                                </div>
-                            </article>
-                        </a>
-
+                    <div class="topic-grid" id="topic-grid">
+                        <!-- Projects will be dynamically loaded here -->
                     </div>
                 </div>
             </section>
@@ -143,5 +38,41 @@
             </div>
         </footer>
     </div>
+
+    <script>
+        // Load projects dynamically from centralized data
+        document.addEventListener('DOMContentLoaded', function() {
+            const topicGrid = document.getElementById('topic-grid');
+            const projects = getAllProjects();
+            
+            projects.forEach(project => {
+                const projectCard = `
+                    <a href="${project.url}" class="topic-card-link">
+                        <article class="topic-card">
+                            <div class="topic-header">
+                                <div class="topic-title-row">
+                                    <h3 class="topic-title">${project.title}</h3>
+                                </div>
+                                <div class="topic-meta">
+                                    <div class="topic-tags">
+                                        ${project.tags.map(tag => `<span class="tag">${tag}</span>`).join('\n                                        ')}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="topic-image">
+                                <img src="${project.image}" alt="${project.imageAlt}">
+                            </div>
+                            <div class="topic-content">
+                                <div class="topic-description">
+                                    <p>${project.description}</p>
+                                </div>
+                            </div>
+                        </article>
+                    </a>
+                `;
+                topicGrid.innerHTML += projectCard;
+            });
+        });
+    </script>
 </body>
 </html> 

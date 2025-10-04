@@ -7,25 +7,24 @@
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="topic-styles.css">
     <link rel="stylesheet" href="wall-segmentation-styles.css">
+    <script src="../projects-data.js"></script>
 </head>
 <body>
     <div class="notebook">
         <div class="notebook-page">
             <a href="../index.html" class="back-link">← Back to Topics</a>
             
-            <div class="topic-header">
-                <h1>Wall Segmentation in Floorplans using Mask R-CNN</h1>
-                <div class="topic-meta">
-                    <p>Last update: July 2024</p>
-                    <div class="topic-tags">
-                        <span class="tag">Computer Vision</span>
-                        <span class="tag">Deep Learning</span>
-                        <span class="tag">Mask R-CNN</span>
-                    </div>
-                </div>
+            <div class="topic-header" id="topic-header">
+                <!-- Header content will be loaded dynamically -->
             </div>
 
             <div class="handwritten">
+                <section class="section">
+                    <div class="content">
+                        <p id="project-description"><!-- Description will be loaded dynamically --></p>
+                    </div>
+                </section>
+
                 <section class="section">
                     <h2>The Challenge</h2>
                     <div class="content">
@@ -509,6 +508,27 @@ else:
                 button.textContent = originalText;
             }, 2000);
         }
+
+        // Load project data dynamically
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectData = getProjectData('wall-segmentation');
+            
+            // Populate header
+            const headerElement = document.getElementById('topic-header');
+            headerElement.innerHTML = `
+                <h1>${projectData.title}</h1>
+                <div class="topic-meta">
+                    <p>Last update: ${projectData.date}</p>
+                    <div class="topic-tags">
+                        ${projectData.tags.map(tag => `<span class="tag">${tag}</span>`).join('\n                        ')}
+                    </div>
+                </div>
+            `;
+            
+            // Populate description
+            const descriptionElement = document.getElementById('project-description');
+            descriptionElement.textContent = projectData.description;
+        });
     </script>
 </body>
 </html> 

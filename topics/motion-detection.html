@@ -7,26 +7,24 @@
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="topic-styles.css">
     <link rel="stylesheet" href="motion-detection-styles.css">
+    <script src="../projects-data.js"></script>
 </head>
 <body>
     <div class="notebook">
         <div class="notebook-page">
             <a href="../index.html" class="back-link">← Back to Topics</a>
             
-            <div class="topic-header">
-                <h1>Motion Detection using Background Subtraction Techniques</h1>
-                <div class="topic-meta">
-                    <p>Last update: December 2023</p>
-                    <div class="topic-tags">
-                        <span class="tag">Computer Vision</span>
-                        <span class="tag">Motion Detection</span>
-                        <span class="tag">OpenCV</span>
-                        <span class="tag">Bg Subtraction</span>
-                    </div>
-                </div>
+            <div class="topic-header" id="topic-header">
+                <!-- Header content will be loaded dynamically -->
             </div>
 
             <div class="handwritten">
+                <section class="section">
+                    <div class="content">
+                        <p id="project-description"><!-- Description will be loaded dynamically --></p>
+                    </div>
+                </section>
+
                 <section class="section">
                     <h2>What I Did</h2>
                     <div class="content">
@@ -342,6 +340,27 @@ cv2.destroyAllWindows()</code></pre>
                 button.textContent = originalText;
             }, 2000);
         }
+
+        // Load project data dynamically
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectData = getProjectData('motion-detection');
+            
+            // Populate header
+            const headerElement = document.getElementById('topic-header');
+            headerElement.innerHTML = `
+                <h1>${projectData.title}</h1>
+                <div class="topic-meta">
+                    <p>Last update: ${projectData.date}</p>
+                    <div class="topic-tags">
+                        ${projectData.tags.map(tag => `<span class="tag">${tag}</span>`).join('\n                        ')}
+                    </div>
+                </div>
+            `;
+            
+            // Populate description
+            const descriptionElement = document.getElementById('project-description');
+            descriptionElement.textContent = projectData.description;
+        });
     </script>
 </body>
 </html>
