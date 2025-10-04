@@ -1,0 +1,49 @@
+/* Motion Detection specific styles */
+.algorithm-comparison {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 15px 0;
+}
+
+.algorithm-comparison h4 {
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.algorithm-comparison ul {
+    padding-left: 20px;
+    margin: 0;
+}
+
+.algorithm-comparison li {
+    margin-bottom: 5px;
+}
+
+.algorithm-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.algorithm-table th, .algorithm-table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+    vertical-align: top;
+}
+
+.algorithm-table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.algorithm-table ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.algorithm-table li {
+    margin-bottom: 5px;
+}

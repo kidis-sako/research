@@ -5,155 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kidis Sako - Research Portfolio</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        .topic-card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 20px;
-            margin: 20px 0;
-            transition: transform 0.2s;
-        }
-
-        .topic-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .topic-header {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .topic-title-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-        }
-
-        .topic-title {
-            font-size: 1.5em;
-            color: #2c3e50;
-            margin: 0;
-        }
-
-        .topic-meta {
-            color: #7f8c8d;
-            font-size: 0.9em;
-        }
-
-        .topic-description {
-            color: #34495e;
-            line-height: 1.6;
-        }
-
-        .topic-tags {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .tag {
-            display: inline-block;
-            padding: 4px 8px;
-            background-color: #e0f7fa;
-            border: 1px solid #b2ebf2;
-            border-radius: 12px;
-            font-size: 0.9em;
-            color: #4a4a4a;
-            text-decoration: none;
-            transition: background-color 0.2s ease;
-        }
-
-        .tag:hover {
-            background-color: #b2ebf2;
-        }
-
-        .key-features {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 15px 0;
-        }
-
-        .key-features h4 {
-            color: #2c3e50;
-            margin-top: 0;
-            margin-bottom: 10px;
-        }
-
-        .key-features ul {
-            padding-left: 20px;
-            margin: 0;
-        }
-
-        .key-features li {
-            margin-bottom: 5px;
-        }
-
-        .experiment-details {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .training-notes {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 15px 0;
-        }
-
-        .training-notes ul {
-            padding-left: 20px;
-            margin: 10px 0;
-        }
-
-        .training-notes li {
-            margin-bottom: 5px;
-        }
-
-        .note {
-            font-style: italic;
-            color: #666;
-            margin-top: 10px;
-        }
-
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .result-image {
-            text-align: center;
-        }
-
-        .result-image img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .result-image h4 {
-            margin-bottom: 10px;
-            color: #2c3e50;
-        }
-
-        .experiment-details {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 20px;
-            margin: 20px 0;
-        }
-    </style>
+    <link rel="stylesheet" href="index-styles.css">
 </head>
 <body>
     <div class="notebook">
@@ -171,6 +23,31 @@
                 <h2>Research Topics</h2>
                 <div class="content">
                     <div class="topic-grid">
+                        
+                        <!-- Ultrasound Bone Segmentation -->
+                        <a href="topics/ultrasound-bone-segmentation.html" class="topic-card-link">
+                            <article class="topic-card">
+                                <div class="topic-header">
+                                    <div class="topic-title-row">
+                                        <h3 class="topic-title">Ultrasound Bone Segmentation for Prosthesis Design</h3>
+                                    </div>
+                                    <div class="topic-meta">
+                                        <div class="topic-tags">
+                                            <span class="tag">Medical Imaging</span>
+                                            <span class="tag">nnU-Net</span>
+                                            <span class="tag">Ultrasound</span>
+                                            <span class="tag">Segmentation</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="topic-content">
+                                    <div class="topic-description">
+                                        <p>Automated deep learning pipeline using nnU-Net v2 for segmenting bone and tissue structures from ultrasound images of residual limbs...</p>
+                                    </div>
+                                </div>
+                            </article>
+                        </a>
+                        
                         <!-- Wall Segmentation Research -->
                         <a href="topics/wall-segmentation.html" class="topic-card-link">
                             <article class="topic-card">
@@ -211,7 +88,7 @@
                                 </div>
                                 <div class="topic-content">
                                     <div class="topic-description">
-                                        <p>This research presents a geometric approach for wall segmentation in floorplan images using traditional computer vision techniques...</p>
+                                        <p>A geometric approach for wall segmentation in floorplan images using traditional CV techniques...</p>
                                     </div>
                                 </div>
                             </article>
@@ -222,7 +99,7 @@
                             <article class="topic-card">
                                 <div class="topic-header">
                                     <div class="topic-title-row">
-                                        <h3 class="topic-title">Motion Detection using Background Subtraction Techniques</h3>
+                                        <h3 class="topic-title">Motion Detection using Bg Subtraction Techniques</h3>
                                     </div>
                                     <div class="topic-meta">
                                         <div class="topic-tags">
@@ -235,11 +112,12 @@
                                 </div>
                                 <div class="topic-content">
                                     <div class="topic-description">
-                                        <p>This research explores various background subtraction algorithms for motion detection in video sequences, comparing GMG, MOG, MOG2, KNN, and CNT techniques...</p>
+                                        <p>This research explores various bg subtraction algorithms for motion detection in video sequences, comparing GMG, MOG, MOG2, KNN, and CNT techniques...</p>
                                     </div>
                                 </div>
                             </article>
                         </a>
+
                     </div>
                 </div>
             </section>

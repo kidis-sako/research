@@ -1,0 +1,135 @@
+/* Wall Segmentation specific styles */
+.paper-review {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-left: 3px solid var(--accent-color);
+}
+
+.paper-review h3 {
+    margin-top: 0;
+    color: var(--accent-color);
+}
+
+.paper-review ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.paper-review li {
+    margin-bottom: 10px;
+}
+
+.literature-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+.literature-table th, .literature-table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+    vertical-align: top;
+}
+
+.literature-table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.literature-table ul {
+    margin: 0;
+    padding-left: 0;
+    list-style-type: none;
+}
+
+.literature-table li {
+    margin-bottom: 8px;
+}
+
+.key-takeaways {
+    background: #f8f9fa;
+    padding: 20px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+}
+
+.key-takeaways h3 {
+    margin-top: 0;
+    border-bottom: 2px solid var(--line-color);
+    padding-bottom: 10px;
+}
+
+.takeaway-item {
+    margin-bottom: 20px;
+}
+
+.takeaway-item h4 {
+    color: var(--accent-color);
+    margin-bottom: 10px;
+}
+
+.takeaway-item ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.experiment-details {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.training-notes {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 15px 0;
+}
+
+.training-notes ul {
+    padding-left: 20px;
+    margin: 10px 0;
+}
+
+.training-notes li {
+    margin-bottom: 5px;
+}
+
+.note {
+    font-style: italic;
+    color: #666;
+    margin-top: 10px;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.result-image {
+    text-align: center;
+}
+
+.result-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.result-image h4 {
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+/* Prevent long URLs in literature table from overflowing */
+.literature-table td {
+    word-break: break-word;
+    overflow-wrap: break-word;
+}

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Topic - Ultrasound Bone Segmentation for Prosthesis Design</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="topic-styles.css">
+    <link rel="stylesheet" href="ultrasound-segmentation-styles.css">
+</head>
+<body>
+    <div class="notebook">
+        <div class="notebook-page">
+            <a href="../index.html" class="back-link">← Back to Topics</a>
+            
+            <div class="topic-header">
+                <h1>Ultrasound Bone Segmentation for Prosthesis Design</h1>
+                <div class="topic-meta">
+                    <p>Last update: October 2025</p>
+                    <div class="topic-tags">
+                        <span class="tag">Medical Imaging</span>
+                        <span class="tag">nnU-Net</span>
+                        <span class="tag">Ultrasound</span>
+                        <span class="tag">Segmentation</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="handwritten">
+                <section class="section">
+                    <h2>⚠️ Confidentiality Notice</h2>
+                    <div class="content">
+                        <p>Due to confidentiality agreements, I'm not sharing source code, detailed implementation specifics, or sensitive project data publicly. Instead, I'm providing a high-level overview of the methodology and preliminary results.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Project Background</h2>
+                    <div class="content">
+                        <p>Before a patient-specific prosthesis can be manufactured, the geometry of a residual limb has to be measured. Until now, this has mostly been done by hand by orthopedic technicians. In this project, I'm using ultrasound to simplify and standardize the measurement process.</p>
+                        <h3>My Goal</h3>
+                        <p>I'm developing an automated deep learning pipeline to accurately segment bone and tissue structures from ultrasound images of residual limbs, enabling precise and standardized prosthesis design.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Why nnU-Net v2?</h2>
+                    <div class="content">
+                        <p>I chose <strong>nnU-Net v2</strong> as the segmentation framework because it's the gold standard for medical image segmentation:</p>
+                        <ul>
+                            <li><strong>Self-configuring</strong> - Automatically adapts to any dataset without manual tuning</li>
+                            <li><strong>State-of-the-art performance</strong> - Consistently achieves top results in medical imaging challenges</li>
+                            <li><strong>Handles ultrasound challenges</strong> - Robust to speckle noise, shadows, and variable contrast</li>
+                            <li><strong>Works with small datasets</strong> - Designed for medical imaging where data is limited</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Training Data</h2>
+                    <div class="content">
+                        <h3>What I Used</h3>
+                        <p>I trained the model on a combination of:</p>
+                        <ul>
+                            <li><strong>My own ultrasound images and labels</strong> - Custom-collected data from the project</li>
+                            <li><strong>UltraBones100k dataset</strong> - A large-scale publicly available dataset</li>
+                        </ul>
+
+                        <h3>Why UltraBones100k?</h3>
+                        <p>The <a href="https://arxiv.org/pdf/2502.03783" target="_blank">UltraBones100k dataset</a> is a breakthrough for ultrasound bone segmentation:</p>
+                        <ul>
+                            <li><strong>100,000+ ultrasound images</strong> - Unprecedented scale for bone segmentation</li>
+                            <li><strong>Automated labeling</strong> - Novel annotation method eliminates manual labeling bottleneck</li>
+                            <li><strong>Diverse coverage</strong> - Multiple bone structures and imaging conditions</li>
+                        </ul>
+
+                        <p>By combining UltraBones100k with my custom project data, I achieved robust generalization across different ultrasound devices and better handling of anatomical variations.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>What I Found</h2>
+                    <div class="content">
+                        <h3>Testing on My Own Leg</h3>
+                        <p>I tested the bone segmentation model on an ultrasound scan of my own leg. The results show how the model identifies and highlights bone structures in real-time.</p>
+
+                        <div class="video-container">
+                            <img src="../images/kidis_leg_segmentation.gif" alt="Back segmentation on ultrasound scan">
+                            <p style="font-style: italic; margin-top: 10px;">Bone segmentation on ultrasound scan of my own leg</p>
+                        </div>
+
+                        <h3>What I Observed</h3>
+                        <ul>
+                            <li>The model successfully identifies bone structures</li>
+                            <li>Segmentation remains stable across different imaging angles and depths</li>
+                            <li>It handles ultrasound artifacts (shadows, speckle noise) effectively</li>
+                            <li>These preliminary results show promising accuracy for clinical application</li>
+                        </ul>
+
+                        <div class="margin-note">
+                            <strong>Note:</strong> I'm showing preliminary results from the bone segmentation component only.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Potential Impact</h2>
+                    <div class="content">
+                        <p>I believe this work could:</p>
+                        <ul>
+                            <li><strong>Standardize prosthesis design</strong> - Reduce variability in manual measurements</li>
+                            <li><strong>Improve patient outcomes</strong> - More accurate limb geometry leads to better-fitting prostheses</li>
+                            <li><strong>Speed up production</strong> - Automated segmentation accelerates the design process</li>
+                            <li><strong>Enable remote processing</strong> - Ultrasound scans can be analyzed from anywhere</li>
+                            <li><strong>Lower costs</strong> - Less need for specialized technician time</li>
+                        </ul>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

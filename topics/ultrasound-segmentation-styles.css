@@ -1,0 +1,15 @@
+/* Ultrasound Segmentation specific styles */
+
+/* Video/Image container */
+.video-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.video-container video,
+.video-container img {
+    max-width: 100%;
+    border: 1px solid var(--line-color);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
