@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Topic - Wall Segmentation in Floorplans (Geometric Approach)</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* Reuse the same styles from wall-segmentation.html */
+        .notebook-page {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="%23e0e0e0" stroke-width="1"/><line x1="0" y1="20" x2="100" y2="20" stroke="%23e0e0e0" stroke-width="1"/><line x1="0" y1="40" x2="100" y2="40" stroke="%23e0e0e0" stroke-width="1"/><line x1="0" y1="60" x2="100" y2="60" stroke="%23e0e0e0" stroke-width="1"/><line x1="0" y1="80" x2="100" y2="80" stroke="%23e0e0e0" stroke-width="1"/></svg>');
+            background-size: 100px 100px;
+            padding: 40px;
+            position: relative;
+        }
+
+        .notebook-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: -1;
+        }
+
+        .page-number {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 0.8em;
+            color: var(--accent-color);
+        }
+
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            text-decoration: none;
+            color: var(--accent-color);
+            font-size: 1.2em;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .topic-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .topic-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .topic-meta {
+            font-style: italic;
+            color: var(--accent-color);
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--line-color);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            border-bottom: 2px solid var(--line-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .handwritten {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+
+        .margin-note {
+            float: right;
+            width: 200px;
+            margin: 0 0 20px 20px;
+            padding: 10px;
+            background: var(--highlight-color);
+            border: 1px solid var(--line-color);
+            font-style: italic;
+        }
+
+        .code-block {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 5px;
+            position: relative;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+
+        .code-header {
+            background-color: #2d2d2d;
+            padding: 8px 15px;
+            border-radius: 5px 5px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .code-header h4 {
+            margin: 0;
+            color: #d4d4d4;
+            font-size: 14px;
+        }
+
+        .copy-button {
+            background-color: #3e3e3e;
+            color: #d4d4d4;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .copy-button:hover {
+            background-color: #4e4e4e;
+        }
+
+        .code-content {
+            display: none;
+            margin-top: 0;
+        }
+
+        .code-content.active {
+            display: block;
+        }
+
+        .code-files {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .code-file {
+            width: 100%;
+        }
+
+        .results-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .result-item {
+            text-align: center;
+        }
+
+        .result-item img {
+            max-width: 100%;
+            border: 1px solid var(--line-color);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="notebook">
+        <div class="notebook-page">
+            <a href="../index.html" class="back-link">← Back to Topics</a>
+            
+            <div class="topic-header">
+                <h1>Wall Segmentation in Floorplans using Geometric Approach</h1>
+                <div class="topic-meta">
+                    <p>Last update: July 2024</p>
+                    <div class="topic-tags">
+                        <span class="tag">Computer Vision</span>
+                        <span class="tag">Geometric Processing</span>
+                        <span class="tag">OpenCV</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="handwritten">
+                <section class="section">
+                    <h2>Abstract</h2>
+                    <div class="content">
+                        <p>This research presents a geometric approach for wall segmentation in floorplan images using traditional computer vision techniques. The method leverages contour detection, corner detection, and morphological operations to accurately identify and extract wall structures. Unlike deep learning approaches, this method provides a more interpretable and computationally efficient solution for wall segmentation tasks.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Motivation</h2>
+                    <div class="content">
+                        <p>While deep learning approaches like Mask R-CNN have shown impressive results in wall segmentation, they often require large amounts of training data and significant computational resources. The geometric approach offers several advantages:</p>
+                        <ul>
+                            <li>No need for training data or model training</li>
+                            <li>Faster processing time</li>
+                            <li>More interpretable results</li>
+                            <li>Easier to debug and modify</li>
+                            <li>Works well with clean floorplan images</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Key Insight</h2>
+                    <div class="content">
+                        <p>The geometric approach to wall segmentation is particularly effective because it leverages the inherent structural properties of floorplans:</p>
+                        <ul>
+                            <li>Walls are typically represented by continuous lines with consistent thickness</li>
+                            <li>Rooms are usually bounded by straight walls meeting at right angles</li>
+                            <li>Floorplans often follow a grid-like structure with clear boundaries</li>
+                            <li>The spatial relationships between walls and rooms are geometrically well-defined</li>
+                        </ul>
+                        <div class="margin-note">
+                            <strong>Note:</strong> This approach works best when the input floorplan maintains these geometric properties, making it ideal for clean, well-drawn architectural plans.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Methodology</h2>
+                    <div class="content">
+                        <h3>Processing Pipeline</h3>
+                        <p>The wall segmentation process follows these key steps:</p>
+                        <ol>
+                            <li><strong>Image Preprocessing</strong>
+                                <ul>
+                                    <li>Binarization of the input image</li>
+                                    <li>Inversion for better contour detection</li>
+                                </ul>
+                            </li>
+                            <li><strong>Contour Processing</strong>
+                                <ul>
+                                    <li>Removal of small contours based on area threshold</li>
+                                    <li>Identification of the largest contour (outer boundary)</li>
+                                </ul>
+                            </li>
+                            <li><strong>Corner Detection</strong>
+                                <ul>
+                                    <li>Harris corner detection to identify room corners</li>
+                                    <li>Line drawing to close gaps between corners</li>
+                                </ul>
+                            </li>
+                            <li><strong>Wall Extraction</strong>
+                                <ul>
+                                    <li>Morphological operations to ensure uniform wall thickness</li>
+                                    <li>Connected component analysis for room separation</li>
+                                </ul>
+                            </li>
+                        </ol>
+
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Code Implementation</h2>
+                    <div class="content">
+                        <h3>Key Code Files</h3>
+                        <div class="code-files">
+                            <div class="code-file">
+                                <div class="code-header" onclick="toggleCode('room_detection')">
+                                    <h4>1. Room Detection Script (room-detection.py)</h4>
+                                    <button class="copy-button" onclick="copyCode('room_detection')">Copy</button>
+                                </div>
+                                <div class="code-content" id="room_detection">
+                                    <pre class="code-block"><code>import cv2
+import numpy as np
+
+def preprocess_image(input_img, binarization_threshold=145):
+    """
+    Binarize and invert the grayscale image for better contour detection.
+    :param input_img: Grayscale image of rooms.
+    :param binarization_threshold: Threshold value for binarization.
+    :return: Binary inverted image.
+    """
+    _, binary_img = cv2.threshold(input_img, binarization_threshold, 255, cv2.THRESH_BINARY)
+    return cv2.bitwise_not(binary_img)
+
+def remove_small_contours(binary_img, min_area):
+    """
+    Remove small contours based on the minimum area threshold.
+    :param binary_img: Binary image with contours.
+    :param min_area: Minimum area for contours to keep.
+    :return: Image with small contours removed.
+    """
+    contours, _ = cv2.findContours(binary_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    mask = np.zeros_like(binary_img)
+    for contour in contours:
+        if cv2.contourArea(contour) > min_area:
+            cv2.fillPoly(mask, [contour], 255)
+    return mask
+
+def detect_corners(input_img, threshold):
+    """
+    Detect corners in the image using the Harris corner detection.
+    :param input_img: Grayscale image of rooms.
+    :param threshold: Threshold for corner detection.
+    :return: Binary image with corners detected.
+    """
+    dst = cv2.cornerHarris(np.float32(input_img), 2, 3, 0.04)
+    dst = cv2.dilate(dst, None)
+    return dst > threshold * dst.max()
+
+def draw_lines_to_close_rooms(corners, img_color, max_length):
+    """
+    Draw lines to close off gaps in the rooms based on corner detection.
+    :param corners: Binary image with corners detected.
+    :param img_color: RGB image to draw lines on.
+    :param max_length: Maximum length of gaps to close.
+    """
+    for y, row in enumerate(corners):
+        x_coords = np.argwhere(row).flatten()
+        for x1, x2 in zip(x_coords[:-1], x_coords[1:]):
+            if x2 - x1 < max_length:
+                cv2.line(img_color, (x1, y), (x2, y), (0, 0, 0), 1)
+
+    for x, col in enumerate(corners.T):
+        y_coords = np.argwhere(col).flatten()
+        for y1, y2 in zip(y_coords[:-1], y_coords[1:]):
+            if y2 - y1 < max_length:
+                cv2.line(img_color, (x, y1), (x, y2), (0, 0, 0), 1)
+
+def find_biggest_contour(input_img):
+    """
+    Find the largest contour in the image, assuming it's the outer boundary.
+    :param input_img: Grayscale image of rooms.
+    :return: Largest contour as a numpy array.
+    """
+    contours, _ = cv2.findContours(input_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    largest_contour = max(contours, key=cv2.contourArea)
+    return largest_contour
+
+def ensure_wall_thickness(image, thickness):
+    """
+    Ensure uniform wall thickness using morphological operations.
+    :param image: Binary image with walls.
+    :param thickness: Desired thickness of walls.
+    :return: Image with uniform wall thickness.
+    """
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (thickness, thickness))
+    dilated = cv2.dilate(image, kernel, iterations=1)
+    return cv2.erode(dilated, kernel, iterations=1)
+
+def extract_rooms_and_walls(input_img, wall_thickness=3):
+    """
+    Detect rooms and extract walls with uniform thickness.
+    :param input_img: Grayscale image of rooms.
+    :param wall_thickness: Desired thickness of walls.
+    :return: Tuple of (rooms, colored_house, walls_image)
+    """
+    binary_img = preprocess_image(input_img)
+    mask = remove_small_contours(binary_img, min_area=25)
+
+    input_img = cv2.bitwise_not(mask)
+    corners = detect_corners(input_img, threshold=0.1)
+
+    img_color = cv2.cvtColor(input_img, cv2.COLOR_GRAY2RGB)
+    draw_lines_to_close_rooms(corners, img_color, max_length=100)
+
+    largest_contour = find_biggest_contour(input_img)
+    mask = np.zeros_like(input_img)
+    cv2.fillPoly(mask, [largest_contour], 255)
+    img_color[mask == 0] = [0, 0, 0]
+
+    gray_img = cv2.cvtColor(img_color, cv2.COLOR_BGR2GRAY)
+    _, labels = cv2.connectedComponents(gray_img)
+
+    rooms = []
+    for label in np.unique(labels)[1:]:
+        component = labels == label
+        if np.sum(component) < 500:
+            continue
+
+        r, c = np.nonzero(component)
+        min_r, max_r = r.min(), r.max()
+        min_c, max_c = c.min(), c.max()
+        crop = np.zeros_like(gray_img).astype(np.uint8)
+        crop[component] = input_img[component]
+        crop = crop[min_r:max_r + 1, min_c:max_c + 1]
+
+        crop = cv2.morphologyEx(crop, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8), iterations=1)
+        crop = cv2.dilate(crop, np.ones((1, 1), np.uint8), iterations=1)
+        crop = cv2.erode(crop, np.ones((1, 1), np.uint8), iterations=1)
+
+        img_color[min_r:max_r + 1, min_c:max_c + 1][crop > 0] = [np.random.randint(0, 255) for _ in range(3)]
+        rooms.append(component)
+
+    walls_image = np.zeros_like(input_img)
+    walls_image[input_img == 0] = 255
+    walls_image = ensure_wall_thickness(walls_image, wall_thickness)
+
+    return rooms, img_color, walls_image
+
+# Load the image
+img = cv2.imread("input/floorplan-maya-official.jpg", 0)
+
+# Process the image
+rooms, colored_room_separation, walls_extracted = extract_rooms_and_walls(img)
+
+# Save the images
+cv2.imwrite('output/colored-room-separation.jpg', colored_room_separation)
+cv2.imwrite('output/walls-extracted.jpg', walls_extracted)
+
+# Display and save the results
+cv2.imshow('Colored Room Separation', colored_room_separation)
+cv2.imshow('Walls Image', walls_extracted)
+cv2.waitKey(0)
+cv2.destroyAllWindows()</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <script>
+                    function toggleCode(id) {
+                        const content = document.getElementById(id);
+                        content.classList.toggle('active');
+                    }
+
+                    function copyCode(id) {
+                        const codeBlock = document.getElementById(id).querySelector('code');
+                        const textArea = document.createElement('textarea');
+                        textArea.value = codeBlock.textContent;
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        
+                        // Show copied notification
+                        const button = event.target;
+                        const originalText = button.textContent;
+                        button.textContent = 'Copied!';
+                        setTimeout(() => {
+                            button.textContent = originalText;
+                        }, 2000);
+                    }
+                </script>
+
+                <section class="section">
+                    <h2>Results</h2>
+                    <div class="content">
+                        <div class="results-gallery">
+                            <div class="result-item">
+                                <h3>Input Floorplan</h3>
+                                <img src="../images/input-floorplan.jpg" alt="Input floorplan">
+                            </div>
+                            <div class="result-item">
+                                <h3>Room Segmentation</h3>
+                                <img src="../images/colored-room-separation.jpg" alt="Colored room separation">
+                            </div>
+                            <div class="result-item">
+                                <h3>Extracted Walls</h3>
+                                <img src="../images/walls-extracted.jpg" alt="Extracted walls">
+                            </div>
+                        </div>
+
+                        <div class="margin-note">
+                            <strong>Performance Notes:</strong>
+                            <ul>
+                                <li>Works best with clean floorplans</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Limitations and Future Work</h2>
+                    <div class="content">
+                        <h3>Current Limitations</h3>
+                        <ul>
+                            <li>Sensitive to image quality and noise</li>
+                            <li>May struggle with complex architectural elements</li>
+                            <li>Limited ability to handle overlapping or ambiguous wall structures</li>
+                        </ul>
+
+                        <h3>Future Improvements</h3>
+                        <ul>
+                            <li>Integration with deep learning for hybrid approach - see <a href="wall-segmentation.html">Mask R-CNN implementation</a></li>
+                            <li>Support for curved walls and non-rectangular rooms</li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+
+            <div class="page-number">Page 1</div>
+        </div>
+    </div>
+</body>
+</html> 
