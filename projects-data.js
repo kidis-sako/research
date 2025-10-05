@@ -59,7 +59,7 @@ const PROJECTS_DATA = {
     'time-dependent-route-planning': {
         id: 'time-dependent-route-planning',
         title: 'Time-Dependent Route Planning with A* Search',
-        description: 'Extended AIMA-Java with time-based routing using A* search algorithm. Routes are optimized for travel time instead of distance, using speed estimates for different road types.',
+        description: 'Extended AIMA-Java with time-based routing using A* search algorithm. Routes are optimized for travel time instead of distance.',
         tags: ['AI', 'A* Search', 'Route Planning'],
         date: 'November 2024',
         dateLabel: 'Completed',
