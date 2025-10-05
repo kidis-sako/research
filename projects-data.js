@@ -55,6 +55,17 @@ const PROJECTS_DATA = {
         image: 'images/langchain.png',
         imageAlt: 'AI-powered log analysis',
         url: 'topics/log-analysis-tool.html'
+    },
+    'time-dependent-route-planning': {
+        id: 'time-dependent-route-planning',
+        title: 'Time-Dependent Route Planning with A* Search',
+        description: 'Extended AIMA-Java with time-based routing using A* search algorithm. Routes are optimized for travel time instead of distance, using speed estimates for different road types.',
+        tags: ['AI', 'A* Search', 'Route Planning'],
+        date: 'October 2025',
+        dateLabel: 'Completed',
+        image: 'images/route-planning-time.jpg',
+        imageAlt: 'Time-optimized route planning',
+        url: 'topics/time-dependent-route-planning.html'
     }
 };
 

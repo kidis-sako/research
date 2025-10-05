@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Project - Time-Dependent Route Planning with A* Search</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="topic-styles.css">
+    <script src="../projects-data.js"></script>
+</head>
+<body>
+    <div class="notebook">
+        <div class="notebook-page">
+            <a href="../index.html" class="back-link">← Back to Projects</a>
+            
+            <div class="project-header" id="project-header">
+                <!-- Header content will be loaded dynamically -->
+            </div>
+
+            <div class="handwritten">
+
+                <section class="section">
+                    <h2>Background</h2>
+                    <div class="content">
+                        <p>I extended the AIMA-Java project (an implementation of algorithms from "Artificial Intelligence: A Modern Approach" by Russell & Norvig) to support time-based route planning. The original implementation only optimized for distance, but in real-world scenarios, we often care more about travel time.</p>
+                        
+                        <p>The challenge: different road types have different speed limits. A longer route on highways might be faster than a shorter route through residential streets.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>What is A* Search?</h2>
+                    <div class="content">
+                        <p>A* is a pathfinding algorithm widely used in GPS navigation, video games, and robotics. It evaluates nodes using <strong>f(n) = g(n) + h(n)</strong>, where g(n) is the actual cost from start and h(n) is the estimated cost to goal.</p>
+
+                        <p>Unlike Dijkstra's algorithm (which explores all directions equally), A* uses the heuristic to guide its search toward the goal, making it much faster while still guaranteeing the optimal path when the heuristic is admissible (never overestimates).</p>
+
+                        <div class="margin-note">
+                            <strong>Key Insight:</strong> For time-based routing, straight-line distance divided by maximum speed (120 km/h) is an admissible heuristic that ensures optimal results.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Implementation</h2>
+                    <div class="content">
+                        <p>Instead of measuring distance, I calculate travel time using <strong>Time = Distance / Speed</strong>. Each road type has a different estimated speed (motorway: 120 km/h, primary: 80 km/h, residential: 30 km/h, etc.).</p>
+                        
+                        <p>The A* heuristic uses straight-line distance divided by maximum speed (120 km/h), ensuring it never overestimates and guarantees optimal results.</p>
+
+                        <div class="margin-note">
+                            <strong>Technical Note:</strong> The heuristic must be admissible (never overestimate) for A* to guarantee the optimal path. Using maximum speed ensures we never underestimate travel time.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>The Code</h2>
+                    <div class="content">
+                        <h3>Key Components</h3>
+                        <div class="code-files">
+                            <div class="code-file">
+                                <div class="code-header" onclick="toggleCode('time_cost')">
+                                    <h4>1. Time-Based Step Cost Function</h4>
+                                    <button class="copy-button" onclick="copyCode('time_cost')">Copy</button>
+                                </div>
+                                <div class="code-content" id="time_cost">
+                                    <pre class="code-block"><code>/**
+ * Calculates the travel time cost for moving along a particular road segment.
+ * Time is calculated as distance / speed and returned in hours.
+ */
+public static double getTimeStepCosts(MapNode state, OsmMoveAction action, MapNode statePrimed) {
+    double distance = action.getTravelDistance(); // in km
+    MapWay way = action.getWay();
+    
+    // Get the highway type
+    String roadType = way.getAttributeValue("highway");
+    
+    // Look up the estimated speed for this road type (km/h)
+    Double speed = SPEED_ESTIMATES.get(roadType);
+    if (speed == null) {
+        speed = SPEED_ESTIMATES.get("default");
+    }
+    
+    // Calculate time in hours (distance / speed)
+    return distance / speed;
+}</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="code-file">
+                                <div class="code-header" onclick="toggleCode('heuristic')">
+                                    <h4>2. Time-Based Heuristic Function</h4>
+                                    <button class="copy-button" onclick="copyCode('heuristic')">Copy</button>
+                                </div>
+                                <div class="code-content" id="heuristic">
+                                    <pre class="code-block"><code>/**
+ * Heuristic function that estimates the travel time to the goal.
+ */
+public static class OsmTimeHeuristicFunction implements ToDoubleFunction&lt;Node&lt;MapNode, OsmMoveAction&gt;&gt; {
+    private final MapNode goalState;
+    
+    public OsmTimeHeuristicFunction(MapNode goalState) {
+        this.goalState = goalState;
+    }
+    
+    /**
+     * Estimates travel time based on straight-line distance and an optimistic
+     * speed estimate of 120 km/h (assumed to be the maximum allowed speed)
+     */
+    @Override
+    public double applyAsDouble(Node&lt;MapNode, OsmMoveAction&gt; node) {
+        double distanceKm = (new Position(node.getState())).getDistKM(goalState);
+        // Use optimistic max speed of 120 km/h for the heuristic to ensure admissibility
+        return distanceKm / 120.0; // Time in hours
+    }
+}</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="code-file">
+                                <div class="code-header" onclick="toggleCode('problem_creation')">
+                                    <h4>3. Problem Creation with Time-Based Costs</h4>
+                                    <button class="copy-button" onclick="copyCode('problem_creation')">Copy</button>
+                                </div>
+                                <div class="code-content" id="problem_creation">
+                                    <pre class="code-block"><code>/** Factory method, responsible for problem creation. */
+@Override
+protected Problem&lt;MapNode, OsmMoveAction&gt; createProblem(MapNode[] pNodes, OsmMap map,
+        MapWayFilter wayFilter, boolean ignoreOneways, int taskSelection) {
+    
+    if (taskSelection == 3) {
+        // Use time-based cost function for Time (Car) option
+        StepCostFunction&lt;MapNode, OsmMoveAction&gt; timeCostFunction =
+                TimeDependentRouteCalculator::getTimeStepCosts;
+        
+        return new RouteFindingProblem(pNodes[0], pNodes[1], wayFilter, 
+                ignoreOneways, timeCostFunction);
+    } else {
+        // Use regular distance-based cost function for other options
+        return new RouteFindingProblem(pNodes[0], pNodes[1], wayFilter, ignoreOneways);
+    }
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Results</h2>
+                    <div class="content">
+                        <p>The implementation successfully optimizes routes for travel time. Below are two examples showing the difference between distance-based and time-based routing:</p>
+                        
+                        <div class="results-gallery">
+                            <div class="result-item">
+                                <h4>Time-Based Route (15 min, 14.62 km)</h4>
+                                <img src="../images/route-planning-time.jpg" alt="Time-optimized route showing 15 minutes travel time">
+                                <p>Route optimized for minimum travel time - takes highways for faster speeds</p>
+                            </div>
+                            <div class="result-item">
+                                <h4>Distance-Based Route (12.50 km)</h4>
+                                <img src="../images/route-planning-distance.jpg" alt="Distance-optimized route showing 12.50 km">
+                                <p>Route optimized for minimum distance - shorter but slower through local roads</p>
+                            </div>
+                        </div>
+
+                        <div class="margin-note">
+                            <strong>Key Finding:</strong> The time-optimized route is 2.12 km longer but likely faster due to higher speed limits on highways. This demonstrates why time-based routing is more practical for real-world navigation.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Takeaways</h2>
+                    <div class="content">
+                        <ul>
+                            <li>A* search is highly efficient for route planning when using a good heuristic</li>
+                            <li>Time-based routing produces more practical routes than distance-based routing</li>
+                            <li>The heuristic must be admissible (never overestimate) to guarantee optimal results</li>
+                            <li>Different road types require different speed estimates for accurate time calculations</li>
+                            <li>Extending existing frameworks like AIMA-Java allows building on proven algorithms</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Resources</h2>
+                    <div class="content">
+                        <ul>
+                            <li>
+                                <a href="https://github.com/aimacode/aima-java" target="_blank">AIMA-Java Repository</a> (https://github.com/aimacode/aima-java)
+                                <p>Original AIMA-Java implementation</p>
+                            </li>
+                            <li>
+                                <a href="http://aima.cs.berkeley.edu/" target="_blank">AIMA Book Website</a> (http://aima.cs.berkeley.edu/)
+                                <p>"Artificial Intelligence: A Modern Approach" by Russell & Norvig</p>
+                            </li>
+                            <li>
+                                <a href="https://en.wikipedia.org/wiki/A*_search_algorithm" target="_blank">A* Search Algorithm</a> (https://en.wikipedia.org/wiki/A*_search_algorithm)
+                                <p>Comprehensive overview of A* and its properties</p>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleCode(id) {
+            const content = document.getElementById(id);
+            content.classList.toggle('active');
+        }
+
+        function copyCode(id) {
+            const codeBlock = document.getElementById(id).querySelector('code');
+            const textArea = document.createElement('textarea');
+            textArea.value = codeBlock.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            // Show copied notification
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = 'Copied!';
+            setTimeout(() => {
+                button.textContent = originalText;
+            }, 2000);
+        }
+
+        // Load project data dynamically
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectData = getProjectData('time-dependent-route-planning');
+            
+            // Populate header with description before tags and date
+            const headerElement = document.getElementById('project-header');
+            headerElement.innerHTML = `
+                <h1>${projectData.title}</h1>
+                <div class="project-description" style="margin: 20px 0;">
+                    <p>${projectData.description}</p>
+                </div>
+                <div class="project-meta">
+                    <p>${projectData.dateLabel}: ${projectData.date}</p>
+                    <div class="project-tags">
+                        ${projectData.tags.map(tag => `<span class="tag">${tag}</span>`).join('\n                        ')}
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
