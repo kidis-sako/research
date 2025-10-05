@@ -15,7 +15,7 @@ const PROJECTS_DATA = {
     'wall-segmentation': {
         id: 'wall-segmentation',
         title: 'Wall Segmentation in Floorplans using Mask R-CNN',
-        description: 'Training Mask R-CNN to detect and segment walls in floorplan images.',
+        description: 'Training Mask R-CNN to detect and segment walls in floorplan images. This enables automated architectural analysis for construction applications.',
         tags: ['Computer Vision', 'Deep Learning', 'Mask R-CNN', 'Segmentation'],
         date: 'July 2024',
         dateLabel: 'Completed',
@@ -26,7 +26,7 @@ const PROJECTS_DATA = {
     'wall-segmentation-geometric': {
         id: 'wall-segmentation-geometric',
         title: 'Wall Segmentation in Floorplans using Geometric Approach',
-        description: 'Using traditional computer vision techniques to segment walls in floorplans. Pure geometry and morphological operations.',
+        description: 'Using traditional computer vision techniques to segment walls in floorplans. This provides a lightweight, interpretable alternative to deep learning that works without training data.',
         tags: ['Computer Vision', 'OpenCV','Geometric Processing', 'Segmentation'],
         date: 'July 2024',
         dateLabel: 'Completed',
@@ -37,7 +37,7 @@ const PROJECTS_DATA = {
     'motion-detection': {
         id: 'motion-detection',
         title: 'Motion Detection using Background Subtraction Techniques',
-        description: 'Testing different background subtraction algorithms for motion detection. Comparing them plus a custom temporal median filter.',
+        description: 'Testing different background subtraction algorithms for motion detection. This research helps optimize surveillance systems and traffic monitoring for real-time applications.',
         tags: ['Computer Vision', 'Motion Detection', 'OpenCV'],
         date: 'December 2023',
         dateLabel: 'Completed',
