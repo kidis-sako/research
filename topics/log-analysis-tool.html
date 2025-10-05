@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Project - AI-Powered Log Analysis Tool</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="topic-styles.css">
+    <script src="../projects-data.js"></script>
+</head>
+<body>
+    <div class="notebook">
+        <div class="notebook-page">
+            <a href="../index.html" class="back-link">← Back to Projects</a>
+            
+            <div class="project-header" id="project-header">
+                <!-- Header content will be loaded dynamically -->
+            </div>
+
+            <div class="handwritten">
+
+                <section class="section">
+                    <h2>⚠️ Confidentiality Notice</h2>
+                    <div class="content">
+                        <p>This is a confidential internal tool, so I can't share code, specific implementation details, or proprietary information. What I'm sharing here is a high-level overview of the methodology when working with complex databases.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>The Problem</h2>
+                    <div class="content">
+                        <p>Support teams spend significant time manually analyzing system logs to diagnose issues. This process is time-consuming, error-prone, and requires deep technical knowledge to trace through complex log files and database states.</p>
+                        
+                        <p>I built an internal tool that automates this process by converting natural language questions into SQL queries, allowing support teams to quickly gather and analyze system information without writing complex queries manually.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Methodology: Natural Language to SQL</h2>
+                    <div class="content">
+                        <p><strong>LangChain's SQL Agent</strong> offers an interesting approach for converting natural language questions into database queries. The framework handles the complexity of translating human questions into executable SQL.</p>
+
+                        <h3>Key Technical Considerations</h3>
+                        
+                        <p><strong>Multi-Agent Architecture:</strong> Combining a DSL (Domain-Specific Language) agent with an SQL agent can be effective. The DSL agent handles business terminology translation, while the SQL agent focuses on query generation and execution.</p>
+
+                        <p><strong>Schema Synchronization:</strong> A challenge with database tools is keeping mappings current. One approach is integrating with version control systems to automatically detect when schema files change and trigger mapping updates.</p>
+
+                        <p><strong>Static vs. Dynamic Mappings:</strong> Using static mappings (like .hbm.xml files) can improve performance by reducing repeated schema lookups, though this requires a synchronization mechanism to stay current.</p>
+
+                        <div class="margin-note">
+                            <strong>Note:</strong> LangChain's SQLDatabaseToolkit provides built-in methods for table discovery and schema retrieval, which simplifies the implementation.
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load project data dynamically
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectData = getProjectData('log-analysis-tool');
+            
+            // Populate header with description before tags and date
+            const headerElement = document.getElementById('project-header');
+            headerElement.innerHTML = `
+                <h1>${projectData.title}</h1>
+                <div class="project-description" style="margin: 20px 0;">
+                    <p>${projectData.description}</p>
+                </div>
+                <div class="project-meta">
+                    <p>${projectData.dateLabel}: ${projectData.date}</p>
+                    <div class="project-tags">
+                        ${projectData.tags.map(tag => `<span class="tag">${tag}</span>`).join('\n                        ')}
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>

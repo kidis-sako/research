@@ -23,73 +23,80 @@
                 <section class="section">
                     <h2>⚠️ Confidentiality Notice</h2>
                     <div class="content">
-                        <p>This is a confidential project, so I can't share code or sensitive details. What I'm sharing here is a high-level overview of how I approached the problem and some early results.</p>
+                        <p>This is a confidential project, so I can't share code or sensitive details. What I'm sharing here is a high-level methodology and technical considerations for approaching this problem.</p>
                     </div>
                 </section>
 
                 <section class="section">
                     <h2>The Challenge</h2>
                     <div class="content">
-                        <p>Creating a custom prosthesis starts with measuring a patient's residual limb. Traditionally, orthopedic technicians do this by hand. This is a time-consuming process and varies from person to person.</p>
+                        <p>Custom prosthesis design traditionally relies on manual measurements of a patient's residual limb by orthopedic technicians. This process is time-consuming and introduces variability between practitioners.</p>
                         
-                        <p>I'm working on a (hopefully) better approach: using ultrasound imaging combined with deep learning to automatically identify bone and tissue structures. The goal is to make prosthesis design faster, more accurate, more consistent, and cheaper.</p>
+                        <p>An alternative approach worth exploring: combining ultrasound imaging with deep learning to automatically identify bone and tissue structures, potentially making prosthesis design faster, more accurate, and more consistent.</p>
                     </div>
                 </section>
 
                 <section class="section">
-                    <h2>nnU-Net</h2>
+                    <h2>Methodology: nnU-Net for Medical Segmentation</h2>
                     <div class="content">
-                        <p>I chose <strong>nnU-Net v2</strong> for this project. It's the gold standard for medical image segmentation, and here's why it works so well:</p>
+                        <p><strong>nnU-Net v2</strong> is widely regarded as the gold standard for medical image segmentation. Key advantages for ultrasound applications:</p>
                         <ul>
-                            <li>It automatically configures itself for any dataset, so no manual tuning needed</li>
-                            <li>It consistently achieves top results in medical imaging competitions</li>
-                            <li>It handles ultrasound's unique challenges like speckle noise and shadows</li>
-                            <li>It works well even with limited training data</li>
-                        </ul>
-                    </div>
-                </section>
-
-                <section class="section">
-                    <h2>Training the Model</h2>
-                    <div class="content">
-                        <p>I trained the model using two sources:</p>
-                        <ul>
-                            <li>My own ultrasound images collected for this project</li>
-                            <li>The <a href="https://arxiv.org/pdf/2502.03783" target="_blank">UltraBones100k dataset paper</a> (https://arxiv.org/pdf/2502.03783) I contacted the authors who provided me access to this dataset with over 100,000 labeled ultrasound images</li>
+                            <li>Self-configuring architecture that adapts to different datasets without manual tuning</li>
+                            <li>Proven performance in medical imaging benchmarks</li>
+                            <li>Robust handling of ultrasound-specific artifacts (speckle noise, acoustic shadows)</li>
+                            <li>Effective even with limited training data</li>
                         </ul>
 
-                        <p>UltraBones100k was a game-changer. Its automated labeling method and diverse coverage of different bone structures gave the model a strong foundation. Combined with my project-specific data, this helped the model generalize well across different ultrasound devices and handle various anatomical variations.</p>
+                        <div class="margin-note">
+                            <strong>Technical Note:</strong> nnU-Net's automatic configuration includes preprocessing, network architecture selection, and training strategy optimization based on dataset properties.
+                        </div>
                     </div>
                 </section>
 
                 <section class="section">
-                    <h2>Early Results</h2>
+                    <h2>Data Considerations</h2>
                     <div class="content">
-                        <p>To test the model, I scanned my own leg. Here are the results:</p>
+                        <p>For ultrasound bone segmentation, combining multiple data sources can improve model robustness:</p>
+                        <ul>
+                            <li><strong>Project-specific data:</strong> Custom collected images for the target application</li>
+                            <li><strong>Large-scale datasets:</strong> The <a href="https://arxiv.org/pdf/2502.03783" target="_blank">UltraBones100k dataset</a> offers over 100,000 labeled ultrasound images with diverse bone structures</li>
+                        </ul>
+
+                        <p>The UltraBones100k dataset's automated labeling method and anatomical diversity provide a strong foundation for generalization across different ultrasound devices and patient variations.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Early Results</h2>                    <div class="content">
+                        <p>Initial testing demonstrates the feasibility of this approach:</p>
 
                         <div class="video-container">
                             <img src="../images/kidis_leg_segmentation.gif" alt="Bone segmentation on ultrasound scan">
-                            <p style="font-style: italic; margin-top: 10px;">The model identifying bone structures in my leg</p>
+                            <p style="font-style: italic; margin-top: 10px;">Example: Automated bone structure identification in ultrasound imaging</p>
                         </div>
 
-                        <p>The model successfully identifies bone structures and stays stable across different angles and depths. It also handles common ultrasound artifacts like shadows and speckle noise pretty well.</p>
+                        <p>Key observations from early experiments:</p>
+                        <ul>
+                            <li>Stable segmentation across varying scan angles and depths</li>
+                            <li>Robust performance despite common ultrasound artifacts (shadows, speckle noise)</li>
+                            <li>Real-time processing capability for clinical workflow integration</li>
+                        </ul>
 
                         <div class="margin-note">
-                            <strong>Note:</strong> These are early results, just the bone segmentation part so far.
+                            <strong>Note:</strong> These results represent initial feasibility testing focused on bone segmentation.
                         </div>
                     </div>
                 </section>
 
                 <section class="section">
-                    <h2>Why This Matters</h2>
-                    <div class="content">
-                        <p>If this approach works at scale, it could make a real difference:</p>
+                    <h2>Why This Matters</h2>                    <div class="content">
+                        <p>If validated at scale, this methodology could offer several advantages:</p>
                         <ul>
-                            <li>More consistent prosthesis designs (less variability from manual measurements)</li>
-                            <li>Better patient outcomes (more accurate fits)</li>
-                            <li>Faster turnaround times (automated vs. manual process)</li>
-                            <li>Remote analysis capability (scans can be processed anywhere)</li>
-                            <li>Lower costs (less specialized technician time needed)</li>
+                            <li>Reduced inter-practitioner variability in measurements</li>
+                            <li>Improved prosthesis fit accuracy</li>
+                            <li>Shorter design cycle times</li>
+                            <li>Remote analysis capabilities for underserved areas</li>
+                            <li>Lower dependency on specialized technician availability</li>
                         </ul>
                     </div>
                 </section>

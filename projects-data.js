@@ -44,6 +44,17 @@ const PROJECTS_DATA = {
         image: 'images/cars-comparison-video-1-min.gif',
         imageAlt: 'Motion detection comparison',
         url: 'topics/motion-detection.html'
+    },
+    'log-analysis-tool': {
+        id: 'log-analysis-tool',
+        title: 'Support Analysis Tool using Generative AI workflows',
+        description: 'Internal tool that uses LangChain SQL Agent to convert natural language questions into database queries, helping support teams diagnose issues 35% faster.',
+        tags: ['LangChain', 'NLP', 'Generative AI', 'Agents'],
+        date: 'October 2025',
+        dateLabel: 'Last update',
+        image: 'images/langchain.png',
+        imageAlt: 'AI-powered log analysis',
+        url: 'topics/log-analysis-tool.html'
     }
 };
 
