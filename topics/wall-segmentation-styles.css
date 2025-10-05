@@ -133,3 +133,54 @@
     word-break: break-word;
     overflow-wrap: break-word;
 }
+
+/* Mobile responsive styles */
+@media (max-width: 600px) {
+    .literature-table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        font-size: 0.85em;
+    }
+
+    .literature-table thead {
+        display: none;
+    }
+
+    .literature-table tr {
+        display: block;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        padding: 10px;
+    }
+
+    .literature-table td {
+        display: block;
+        padding: 8px 0;
+        border: none;
+        text-align: left;
+    }
+
+    .literature-table td:before {
+        content: attr(data-label);
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .key-takeaways {
+        padding: 15px;
+    }
+
+    .experiment-details {
+        padding: 15px;
+    }
+
+    .training-notes {
+        padding: 10px;
+    }
+
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -47,3 +47,18 @@
 .algorithm-table li {
     margin-bottom: 5px;
 }
+
+/* Mobile responsive styles */
+@media (max-width: 600px) {
+    .algorithm-table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .algorithm-table th,
+    .algorithm-table td {
+        padding: 8px;
+        font-size: 0.9em;
+    }
+}
