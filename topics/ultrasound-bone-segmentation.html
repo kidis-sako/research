@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="topic-styles.css">
     <link rel="stylesheet" href="ultrasound-segmentation-styles.css">
     <script src="../projects-data.js"></script>
+    <script src="ultrasound-content-obfuscated.js"></script>
 </head>
 <body>
     <div class="notebook">
@@ -18,7 +19,32 @@
                 <!-- Header content will be loaded dynamically -->
             </div>
 
-            <div class="handwritten">
+            <!-- Security Lock Overlay -->
+            <div id="security-overlay" class="security-overlay">
+                <div class="lock-container">
+                    <div class="lock-icon">🔒</div>
+                    <h2>Content Restricted</h2>
+                    <p class="restriction-message">
+                        This project contains sensitive medical research data and proprietary algorithms. 
+                        Access is restricted due to confidentiality agreements and ongoing patent applications.
+                    </p>
+                    <div class="security-notice">
+                        <p><strong>Reason for Restriction:</strong></p>
+                        <ul>
+                            <li>Confidential medical imaging algorithms</li>
+                            <li>Proprietary prosthesis design methodology</li>
+                            <li>Pending patent applications</li>
+                            <li>Non-disclosure agreements with medical partners</li>
+                        </ul>
+                    </div>
+                    <div class="contact-info">
+                        <p>For access inquiries, please contact the research team.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hidden Content Container -->
+            <div id="hidden-content" class="hidden-content" style="display: none;">
 
                 <section class="section">
                     <h2>⚠️ Confidentiality Notice</h2>
@@ -106,8 +132,109 @@
     </div>
 
     <script>
+        // Security and obfuscation functions
+        function obfuscateString(str) {
+            return btoa(str).split('').reverse().join('');
+        }
+        
+        function deobfuscateString(str) {
+            return atob(str.split('').reverse().join(''));
+        }
+        
+        // Security validation
+        function validateAccess() {
+            // Multiple security checks
+            const checks = [
+                () => window.location.hostname === 'localhost' || window.location.hostname.includes('github.io'),
+                () => !window.location.search.includes('debug'),
+                () => !window.location.search.includes('bypass'),
+                () => !document.cookie.includes('bypass_security'),
+                () => !localStorage.getItem('security_bypass'),
+                () => !sessionStorage.getItem('security_bypass'),
+                () => Date.now() > new Date('2025-01-01').getTime(), // Time-based check
+                () => !window.location.hash.includes('unlock'),
+                () => navigator.userAgent.indexOf('bot') === -1, // Block bots
+                () => !window.location.protocol.includes('file:') // Block local file access
+            ];
+            
+            return checks.every(check => {
+                try {
+                    return check();
+                } catch (e) {
+                    return false;
+                }
+            });
+        }
+        
+        // Anti-tampering measures
+        function setupSecurityMeasures() {
+            // Prevent right-click context menu
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            
+            // Prevent F12, Ctrl+Shift+I, Ctrl+U, Ctrl+S, Ctrl+A
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'F12' || 
+                    (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                    (e.ctrlKey && e.key === 'u') ||
+                    (e.ctrlKey && e.key === 's') ||
+                    (e.ctrlKey && e.key === 'a') ||
+                    (e.ctrlKey && e.key === 'p')) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            // Prevent text selection
+            document.addEventListener('selectstart', e => e.preventDefault());
+            
+            // Prevent drag and drop
+            document.addEventListener('dragstart', e => e.preventDefault());
+            document.addEventListener('drop', e => e.preventDefault());
+            
+            // Detect developer tools
+            let devtools = {open: false, orientation: null};
+            setInterval(function() {
+                if (window.outerHeight - window.innerHeight > 200 || 
+                    window.outerWidth - window.innerWidth > 200) {
+                    if (!devtools.open) {
+                        devtools.open = true;
+                        document.body.style.display = 'none';
+                        document.body.innerHTML = '<div style="text-align:center;padding:50px;"><h1>Access Denied</h1><p>Developer tools detected. This content is protected.</p></div>';
+                    }
+                }
+            }, 500);
+            
+            // Obfuscate content in DOM and load from secure source
+            const contentElements = document.querySelectorAll('#hidden-content *');
+            contentElements.forEach(el => {
+                if (el.textContent) {
+                    el.setAttribute('data-obfuscated', obfuscateString(el.textContent));
+                    el.textContent = '';
+                }
+            });
+            
+            // Additional security: Clear any remaining text content
+            setTimeout(() => {
+                const allTextNodes = document.querySelectorAll('#hidden-content *');
+                allTextNodes.forEach(node => {
+                    if (node.textContent && node.textContent.trim()) {
+                        node.textContent = '';
+                        node.style.display = 'none';
+                    }
+                });
+            }, 100);
+        }
+        
         // Load project data dynamically
         document.addEventListener('DOMContentLoaded', function() {
+            // Security check
+            if (!validateAccess()) {
+                document.body.innerHTML = '<div style="text-align:center;padding:50px;"><h1>Access Denied</h1><p>Unauthorized access attempt detected.</p></div>';
+                return;
+            }
+            
+            setupSecurityMeasures();
+            
             const projectData = getProjectData('ultrasound-bone-segmentation');
             
             // Populate header with description before tags and date
@@ -124,6 +251,10 @@
                     </div>
                 </div>
             `;
+            
+            // Ensure overlay is always visible
+            document.getElementById('security-overlay').style.display = 'block';
+            document.getElementById('hidden-content').style.display = 'none';
         });
     </script>
 </body>

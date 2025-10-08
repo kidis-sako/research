@@ -10,7 +10,9 @@ const PROJECTS_DATA = {
         dateLabel: 'Last update',
         image: 'images/kidis_leg_segmentation.gif',
         imageAlt: 'Ultrasound bone segmentation',
-        url: 'topics/ultrasound-bone-segmentation.html'
+        url: 'topics/ultrasound-bone-segmentation.html',
+        locked: true,
+        lockReason: 'Confidential medical research data and proprietary algorithms'
     },
     'wall-segmentation': {
         id: 'wall-segmentation',

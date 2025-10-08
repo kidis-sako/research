@@ -193,10 +193,29 @@ footer {
     padding: 15px;
     box-shadow: var(--card-shadow);
     transition: transform 0.2s ease;
+    position: relative;
 }
 
 .project-card:hover {
     transform: translateY(-2px);
+}
+
+/* Restricted Project Card */
+.project-card[data-restricted="true"] {
+    border: 2px solid #dee2e6;
+    background: linear-gradient(135deg, #f8f9fa, #ffffff);
+    position: relative;
+    opacity: 0.8;
+}
+
+.project-card[data-restricted="true"]::before {
+    content: "🔒";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.2em;
+    opacity: 0.6;
+    z-index: 1;
 }
 
 .project-header {
@@ -241,6 +260,32 @@ footer {
 
 .tag:hover {
     background-color: var(--tag-border);
+}
+
+/* Restricted Tag - Special styling */
+.tag:contains("🔒") {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+    color: white;
+    border: 2px solid #c0392b;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 4px rgba(192, 57, 43, 0.3);
+    animation: restrictedPulse 2s ease-in-out infinite;
+}
+
+/* Alternative approach using attribute selector */
+.tag[data-restricted="true"] {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    color: #6c757d;
+    border: 2px solid #dee2e6;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.tag[data-restricted="true"]::before {
+    content: "🔒 ";
+    margin-right: 4px;
 }
 
 .tag-cloud {
@@ -332,6 +377,16 @@ footer {
 .project-card-link:hover .project-card {
     transform: translateY(-5px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Restricted Project Card Link */
+.project-card-link:has(.project-card[data-restricted="true"]) {
+    cursor: not-allowed;
+}
+
+.project-card-link:has(.project-card[data-restricted="true"]):hover .project-card {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 /* Notebook Page Effect */
