@@ -1,5 +1,4 @@
 // Centralized project metadata
-// This is the single source of truth for all project information
 const PROJECTS_DATA = {
     'ultrasound-bone-segmentation': {
         id: 'ultrasound-bone-segmentation',
