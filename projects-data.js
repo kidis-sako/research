@@ -1,5 +1,16 @@
 // Centralized project metadata
 const PROJECTS_DATA = {
+    'surfing-paper': {
+        id: 'surfing-paper',
+        title: 'Surfing Maneuver Recognition using Transfer Learning with S3D CNNs',
+        description: 'Automated surfing maneuver recognition using transfer learning with the S3D architecture. We leverage a pretrained S3D model from the Kinetics-400 dataset to achieve 75.36% test accuracy with only 4,100 trainable parameters.',
+        tags: ['Computer Vision', 'Transfer Learning', 'Video Recognition', 'S3D'],
+        date: 'November 2025',
+        dateLabel: 'Completed',
+        image: 'images/surfing_frames.png',
+        imageAlt: 'Surfing maneuver recognition paper',
+        url: 'topics/surfing_maneuver_recognition_s3d_transfer_learning.pdf'
+    },
     'ultrasound-bone-segmentation': {
         id: 'ultrasound-bone-segmentation',
         title: 'Ultrasound Bone Segmentation for Prosthesis Design',

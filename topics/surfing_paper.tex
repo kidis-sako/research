@@ -1,0 +1,278 @@
+%% surfing_paper.tex
+%% 2025/11/09
+%% by Kidis Sako
+%%
+
+\documentclass[11pt, journal]{IEEEtran}
+
+% *** CITATION PACKAGES ***
+\usepackage{cite}
+
+% *** GRAPHICS RELATED PACKAGES ***
+\ifCLASSINFOpdf
+  \usepackage[pdftex]{graphicx}
+  \graphicspath{{./figures/}}
+  \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+\else
+  \usepackage[dvips]{graphicx}
+  \graphicspath{{./figures/}}
+  \DeclareGraphicsExtensions{.eps}
+\fi
+
+% *** MATH PACKAGES ***
+\usepackage[cmex10]{amsmath}
+
+% *** SPECIALIZED LIST PACKAGES ***
+\usepackage{algorithmic}
+
+% *** ALIGNMENT PACKAGES ***
+\usepackage{array}
+
+% *** SUBFIGURE PACKAGES ***
+\usepackage[tight,footnotesize]{subfigure}
+
+% *** PDF, URL AND HYPERLINK PACKAGES ***
+\usepackage{url}
+
+% *** CODE LISTINGS ***
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red},
+}
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor ma-neu-ver}
+
+\begin{document}
+
+% paper title
+\title{Surfing Maneuver Recognition using Transfer Learning with S3D Convolutional Neural Networks}
+
+% author name
+\author{\parbox{3 in}{\centering Kidis Sako\\
+         University of Applied Sciences Ulm\\
+         Advanced Machine Learning\\
+         {\tt\small sakoki01@thu.de}}
+}
+
+% The paper headers
+\markboth{Surfing Maneuver Recognition using S3D Transfer Learning}{}
+
+% make the title area
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+This paper presents an approach to automated surfing maneuver recognition using transfer learning with the S3D (Separable 3D Convolutional Neural Network) architecture. We leverage a pretrained S3D model from the Kinetics-400 dataset to address the challenge of labor-intensive manual video analysis. Our dataset comprises 1,062 video clips across four maneuver classes: cutback-frontside, take-off, 360, and roller. Despite significant class imbalance (4.36:1 ratio), we achieve 75.36\% test accuracy with only 4,100 trainable parameters out of 7.9 million total parameters. We employ Optuna-based hyperparameter optimization to determine optimal learning rate, dropout, and weight decay values. Our results demonstrate that transfer learning from general action recognition datasets can effectively generalize to domain-specific sports video analysis tasks, even with limited training data and computational resources.
+\end{abstract}
+
+% For peer review papers
+\IEEEpeerreviewmaketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+\label{sec:intro}
+
+Surfing performance analysis traditionally relies on labor-intensive manual video review by coaches and judges. Automated maneuver recognition faces challenges due to dynamic ocean waves, varying lighting and camera conditions, and execution variability (Figure \ref{fig:surfing_frames}).
+
+\begin{figure}[!ht]
+	\centering
+		\includegraphics[width=\columnwidth]{surfing_frames.png}
+	\caption{Sample frames (43 and 64 of 64) from a training video showing a surfing maneuver with water spray and wave interaction patterns.}
+	\label{fig:surfing_frames}
+\end{figure}
+
+Training deep neural networks from scratch requires massive labeled datasets and computational resources often unavailable in specialized sports domains. Transfer learning addresses this by adapting knowledge from large-scale datasets to target domains with limited data.
+
+This work applies transfer learning for surfing maneuver recognition using the S3D architecture \cite{xie2018rethinking}. We freeze pretrained Kinetics-400 layers and fine-tune only the classification head, achieving 75.36\% test accuracy with 4,100 trainable parameters. Optuna-based hyperparameter optimization determines optimal learning rate, dropout, and weight decay.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Background and Related Work}
+\label{sec:background}
+
+\subsection{Video Action Recognition}
+\label{subsec:action}
+
+Video action recognition classifies actions from video sequences by modeling spatial and temporal dynamics. Modern deep learning approaches use 3D convolutional neural networks to learn spatiotemporal features directly from raw video. Transfer learning from large-scale datasets like Kinetics-400 \cite{kay2017kinetics} has become standard practice for video understanding tasks with limited training data.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Dataset and Preprocessing}
+\label{sec:dataset}
+
+\subsection{Dataset Description}
+\label{subsec:dataset_desc}
+
+We use the Surfing Maneuver Classification dataset \cite{twonzii2024surfing} containing 1,062 video clips across four maneuver classes: cutback-frontside (sharp turn toward breaking wave), take-off (catching and standing up), 360 (full rotation), and roller (riding on top of breaking wave). The dataset splits into training (741), validation (110), and test (211) sets (70\%/10\%/20\%).
+
+\subsection{Class Imbalance Analysis}
+\label{subsec:imbalance}
+
+Class distribution analysis reveals significant imbalance in the training set:
+\begin{itemize}
+    \item Roller: 366 samples (49.4\%)
+    \item Cutback-Frontside: 166 samples (22.4\%)
+    \item 360: 125 samples (16.9\%)
+    \item Take-off: 84 samples (11.3\%)
+\end{itemize}
+
+The imbalance ratio of 4.36:1 (max/min) is significant and could bias the model toward the majority class (roller).
+
+\subsection{Video Preprocessing Pipeline}
+\label{subsec:preprocessing}
+
+We uniformly sample 64 frames per video. Each frame is resized to $256 \times 256$ pixels, center-cropped to $224 \times 224$ pixels, and normalized to $[0, 1]$. Frames are then normalized using Kinetics-400 statistics (mean: $[0.432, 0.395, 0.376]$, std: $[0.228, 0.221, 0.217]$). The final tensor shape is $(C, T, H, W) = (3, 64, 224, 224)$. All videos are preprocessed once and cached as PyTorch tensors.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Methodology}
+\label{sec:methodology}
+
+\subsection{Model Architecture}
+\label{subsec:architecture}
+
+We employ the S3D (Separable 3D CNN) architecture \cite{xie2018rethinking}, which factorizes 3D convolutions into spatial, temporal, and pointwise operations, reducing computational cost. Built on Inception blocks \cite{szegedy2015going}, the S3D model pretrained on Kinetics-400 contains 7.9M total parameters: a feature extractor backbone (7.896M), global average pooling, and a classifier head (4,100 parameters for 4 classes).
+
+\subsection{Transfer Learning Strategy}
+\label{subsec:transfer_strategy}
+
+We freeze all backbone layers pretrained on Kinetics-400 and train only a new classifier head (Kaiming initialization) adapted from 400 classes to 4 surfing maneuvers. This prevents overfitting on the small dataset while reducing training time and memory requirements.
+
+\subsection{Hyperparameter Optimization}
+\label{subsec:hyperopt}
+
+We employ \emph{Optuna} \cite{akiba2019optuna} with Tree-structured Parzen Estimator (TPE) to optimize learning rate, dropout rate, and weight decay. The optimal hyperparameters are: learning rate $7.921 \times 10^{-4}$, dropout rate $0.0036$, and weight decay $5.284 \times 10^{-4}$.
+
+\subsection{Training Configuration}
+\label{subsec:training}
+
+We train for 25 epochs with batch size 6 using RMSprop optimizer and cosine annealing learning rate schedule. Standard cross-entropy loss is employed (class-weighted loss degraded performance per Section \ref{sec:discussion}). All random seeds are fixed to 42 for reproducibility.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Experiments and Results}
+\label{sec:experiments}
+
+\subsection{Training Dynamics}
+\label{subsec:training_dynamics}
+
+Figure \ref{fig:training_curves} shows training and validation performance over 25 epochs. Training accuracy increases from 47.64\% to over 80\%, while validation accuracy reaches 80.91\%. The close tracking between training and validation curves indicates minimal overfitting despite the small dataset.
+
+\begin{figure*}[!h]
+	\centering
+		\includegraphics[width=0.9\textwidth]{training_history.png}
+	\caption{Training History: Loss, Accuracy, and Learning Rate over 25 Epochs}
+	\label{fig:training_curves}
+\end{figure*}
+
+\subsection{Test Set Performance}
+\label{subsec:test}
+
+The model achieves 75.36\% test accuracy and 0.6350 test loss. The gap from validation accuracy (80.91\%) suggests reasonable generalization. Table \ref{tab:perclass} shows per-class performance.
+
+\begin{table}[htb]
+\caption{Per-Class Test Accuracy}
+\label{tab:perclass}
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Class} & \textbf{Accuracy} & \textbf{Correct/Total} \\
+\hline
+Cutback-Frontside & 70.21\% & 33/47 \\
+Take-off & 79.17\% & 19/24 \\
+360 & 72.22\% & 26/36 \\
+Roller & 77.88\% & 81/104 \\
+\hline
+\textbf{Overall} & \textbf{75.36\%} & \textbf{159/211} \\
+\hline
+\end{tabular}
+\end{table}
+
+Despite severe class imbalance, per-class accuracy is balanced (70-79\%). The minority class take-off achieves the highest accuracy (79.17\%), indicating the model does not bias toward the majority class.
+
+\subsection{Confusion Matrix Analysis}
+\label{subsec:confusion}
+
+\begin{figure}[!htb]
+	\centering
+		\includegraphics[width=0.45\textwidth]{confusion_matrix.png}
+	\caption{Confusion Matrix on Test Set}
+	\label{fig:confusion}
+\end{figure}
+
+Figure \ref{fig:confusion} shows most errors occur between similar maneuvers (cutback-frontside, 360, roller) that involve turning motions. Take-off shows minimal confusion due to its distinct motion signature (paddling, standing up).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Discussion}
+\label{sec:discussion}
+
+Transfer learning from Kinetics-400 to surfing maneuvers is highly effective. Kinetics-400 contains no surfing-specific classes, yet the pretrained S3D backbone captures generic spatiotemporal patterns. We achieve 75.36\% test accuracy with only 4,100 trainable parameters. Training takes 2-3 minutes per epoch, making the approach practical.
+
+A key finding concerns class imbalance mitigation. Despite the 4.36:1 imbalance ratio, common techniques (weighted loss, oversampling) surprisingly \textbf{degraded performance}. These methods caused overcompensation toward minority classes and underprediction of the majority class. We hypothesize that pretrained features already provide sufficient class discrimination. Explicit balancing introduces unnecessary bias. The final model uses unweighted loss and uniform sampling.
+
+Future work should explore video-specific augmentation techniques, selective fine-tuning of deeper layers, temporal aggregation for longer videos, and expanded datasets for minority classes.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper presented a transfer learning approach for automated surfing maneuver recognition. We use the S3D architecture pretrained on Kinetics-400. We freeze the pretrained backbone and train only a lightweight classification head (4,100 parameters). This achieves 75.36\% test accuracy on a four-class surfing dataset with significant class imbalance.
+
+Our key findings include:
+\begin{enumerate}
+    \item Transfer learning from general action recognition datasets generalizes well to specialized sports video analysis
+    \item Frozen backbone features provide strong regularization and computational efficiency
+    \item Hyperparameter optimization via Optuna yields significant performance gains
+    \item Explicit class balancing techniques can degrade performance when pretrained features provide good discrimination
+    \item Per-class accuracy remains balanced despite severe training set imbalance
+\end{enumerate}
+
+The model is practical for automated surfing performance analysis. It can benefit coaches, athletes, and competition organizers. Future work should explore data augmentation, selective fine-tuning, and expanded datasets to improve accuracy and robustness.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Code Availability}
+
+The complete source code is publicly available at \url{https://github.com/kidis-sako/surfing-the-cnns}. For questions or collaboration inquiries, please contact the author.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{thebibliography}{10}
+
+\bibitem{twonzii2024surfing}
+Twonzii,
+``Surfing maneuver classification dataset,''
+Kaggle, 2024. [Online]. Available: \url{https://www.kaggle.com/datasets/twonzii/surfing-maneuver-classification}
+
+\bibitem{xie2018rethinking}
+S.~Xie, C.~Sun, J.~Huang, Z.~Tu, and K.~Murphy,
+``Rethinking spatiotemporal feature learning: Speed-accuracy trade-offs in video classification,''
+in \emph{Proceedings of the European Conference on Computer Vision (ECCV)}, 2018, pp. 305--321.
+
+\bibitem{szegedy2015going}
+C.~Szegedy, W.~Liu, Y.~Jia, P.~Sermanet, S.~Reed, D.~Anguelov, D.~Erhan, V.~Vanhoucke, and A.~Rabinovich,
+``Going deeper with convolutions,''
+in \emph{Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)}, 2015, pp. 1--9.
+
+\bibitem{kay2017kinetics}
+W.~Kay, J.~Carreira, K.~Simonyan, B.~Zhang, C.~Hillier, S.~Vijayanarasimhan, F.~Viola, T.~Green, T.~Back, P.~Natsev, M.~Suleyman, and A.~Zisserman,
+``The kinetics human action video dataset,''
+\emph{arXiv preprint arXiv:1705.06950}, 2017.
+
+\bibitem{akiba2019optuna}
+T.~Akiba, S.~Sano, T.~Yanase, T.~Ohta, and M.~Koyama,
+``Optuna: A next-generation hyperparameter optimization framework,''
+in \emph{Proceedings of the 25th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining}, 2019, pp. 2623--2631.
+
+\end{thebibliography}
+
+\end{document}
+
