@@ -2,8 +2,8 @@
 const PROJECTS_DATA = {
     'surfing-paper': {
         id: 'surfing-paper',
-        title: 'Surfing Maneuver Recognition: When Static Image Features Outperform Spatiotemporal 3D Models',
-        description: 'We compare 2D and 3D convolutional architectures for surfing maneuver recognition in a small-data regime. Contrary to common assumptions in video action recognition, a 2D CNN pretrained on ImageNet outperforms a spatiotemporal 3D CNN pretrained on Kinetics-400 by a large margin.',
+        title: 'Surfing Maneuver Recognition: When Static Image Outperform Spatiotemporal 3D',
+        description: 'We compare 2D and 3D convolutional architectures for surfing maneuver recognition in a small-data regime. Contrary to common assumptions in video action recognition, a 2D CNN outperforms a spatiotemporal 3D CNN.',
         tags: ['Computer Vision', 'Transfer Learning', 'Video Recognition', 'S3D'],
         date: 'November 2025',
         dateLabel: 'Completed',
@@ -34,6 +34,17 @@ const PROJECTS_DATA = {
         url: 'topics/ultrasound-bone-segmentation.html',
         locked: false,
         lockReason: 'Confidential medical research data and proprietary algorithms'
+    },
+    'ultrasound-object-detection': {
+        id: 'ultrasound-object-detection',
+        title: 'Ultrasound Object Detection for Image-Guided Therapy',
+        description: 'Extended the IGTPrototypingTool with real-time object detection capabilities using OpenCV. Implemented line and circle detection algorithms with calibrated measurement tools for surgical applications.',
+        tags: ['Computer Vision', 'Medical Imaging', 'OpenCV', 'Image-Guided Therapy'],
+        date: 'December 2025',
+        dateLabel: 'Completed',
+        image: 'images/line-detection-results.jpg',
+        imageAlt: 'Ultrasound object detection with RANSAC line detection',
+        url: 'topics/ultrasound-object-detection.html'
     },
     'wall-segmentation': {
         id: 'wall-segmentation',

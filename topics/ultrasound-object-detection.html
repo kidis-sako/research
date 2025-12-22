@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Project - Ultrasound Object Detection for IGT</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="topic-styles.css">
+    <script src="../projects-data.js"></script>
+</head>
+<body>
+    <div class="notebook">
+        <div class="notebook-page">
+            <a href="../index.html" class="back-link">← Back to Projects</a>
+            
+            <div class="project-header" id="project-header">
+                <!-- Header content will be loaded dynamically -->
+            </div>
+
+            <div class="handwritten">
+
+                <section class="section">
+                    <h2>Background</h2>
+                    <div class="content">
+                        <p>Image-guided therapy (IGT) relies on real-time ultrasound imaging to visualize anatomical structures and surgical instruments during procedures. Automatic object detection in ultrasound images can significantly improve surgical precision by identifying critical structures like needles, catheters, and anatomical landmarks.</p>
+                        
+                        <p>I extended the IGTPrototypingTool to include real-time object detection capabilities using OpenCV algorithms. The goal was to automatically detect objects in ultrasound images and provide measurement tools to help clinicians during procedures.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Contributions</h2>
+                    <div class="content">
+                        <h3>Core Functionality</h3>
+                        <ul>
+                            <li><strong>Real-time Data Integration:</strong> Created a new tab for Object Detection that loads ultrasound real-time data from a frame grabber</li>
+                            <li><strong>Circle/Sphere Detection:</strong> Implemented and tested Hough Circle Detection algorithm to identify circular structures in ultrasound images</li>
+                            <li><strong>Distance Measurement:</strong> Added functionality to measure the distance between two points in the ultrasound image (in pixels)</li>
+                            <li><strong>Line Detection:</strong> Tested and implemented multiple line detection algorithms including RANSAC and Hough Line Transform for needle detection</li>
+                            <li><strong>Configurable UI:</strong> Added UI controls to adjust algorithm parameters in real-time (thresholds, sensitivity, etc.)</li>
+                            <li><strong>Spacing Calibration:</strong> Performed spacing calibration to convert pixel measurements to millimeters for clinical use</li>
+                        </ul>
+
+                        <div class="margin-note">
+                            <strong>Repository:</strong> <a href="https://github.com/kidis-sako/IGTPrototypingTool-ObjectDetection" target="_blank">IGTPrototypingTool-ObjectDetection</a>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Methodology</h2>
+                    <div class="content">
+                        <h3>Image Preprocessing</h3>
+                        <p>To improve algorithm performance, I implemented automatic image enhancement that modifies the initial images before applying detection algorithms. This includes threshold adjustments and noise reduction techniques specific to ultrasound imaging.</p>
+
+                        <h3>Line Detection Algorithms</h3>
+                        <p>I tested two main approaches for line detection:</p>
+                        <ul>
+                            <li><strong>RANSAC Algorithm:</strong> More robust to outliers, provides higher accuracy for needle detection. Line 1 in the results shows excellent performance corresponding to the needle position.</li>
+                            <li><strong>Hough Line Transform:</strong> Classic computer vision approach, faster but less robust to noise in ultrasound images</li>
+                        </ul>
+
+                        <h3>Circle Detection</h3>
+                        <p>Used the Hough Circle Detection algorithm to identify spherical structures. This is particularly useful for detecting circular anatomical features or calibration markers.</p>
+
+                        <h3>Calibration System</h3>
+                        <p>Implemented a spacing calibration system to convert pixel-based measurements to real-world millimeter measurements. This is critical for clinical applications where accurate measurements are required.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Results</h2>
+                    <div class="content">
+                        <h3>System Integration</h3>
+                        <div class="results-gallery">
+                            <div class="result-item">
+                                <h4>Frame Grabber Connection</h4>
+                                <img src="../images/water-bath-frame-graber.png" alt="Connection to Frame Grabber while testing on water bath">
+                                <p>Successfully established connection to frame grabber during water bath testing, enabling real-time ultrasound data acquisition</p>
+                            </div>
+                        </div>
+
+                        <h3>Line Detection Performance</h3>
+                        <div class="results-gallery">
+                            <div class="result-item">
+                                <h4>Auto-Enable Thresholds</h4>
+                                <img src="../images/line.jpg" alt="Line Detection with Auto-Enable Thresholds">
+                                <p>Automatic threshold adjustment that modifies initial images to enhance algorithm performance</p>
+                            </div>
+                            <div class="result-item">
+                                <h4>RANSAC Algorithm Results</h4>
+                                <img src="../images/line-detection-results.jpg" alt="Line Detection RANSAC Algorithm Results">
+                                <p>RANSAC line detection showing Line 1 with higher accuracy, corresponding to the needle position</p>
+                            </div>
+                            <div class="result-item">
+                                <h4>Hough Line Detection</h4>
+                                <img src="../images/line-detection-own.jpg" alt="Hough Line Detection Algorithm Results">
+                                <p>Hough Transform results for line detection in ultrasound images</p>
+                            </div>
+                        </div>
+
+                        <h3>Circle Detection</h3>
+                        <div class="results-gallery">
+                            <div class="result-item">
+                                <h4>Hough Circle Detection</h4>
+                                <img src="../images/circles.jpeg" alt="Circle Detection using Hough Circle Detection Algorithm">
+                                <p>Successful detection of circular structures using the Hough Circle Detection algorithm</p>
+                            </div>
+                        </div>
+
+                        <h3>Measurement Capabilities</h3>
+                        <div class="results-gallery">
+                            <div class="result-item">
+                                <h4>Line Measurements</h4>
+                                <img src="../images/circles-measurements.jpeg" alt="Line Measurements Results">
+                                <p>Distance measurement functionality with calibrated mm/pixel conversion for accurate clinical measurements</p>
+                            </div>
+                        </div>
+
+                        <div class="margin-note">
+                            <strong>Key Finding:</strong> RANSAC line detection outperformed Hough Transform for needle detection in ultrasound images, providing more accurate and robust results in the presence of noise and artifacts.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Technical Implementation</h2>
+                    <div class="content">
+                        <h3>Technologies Used</h3>
+                        <ul>
+                            <li><strong>Java:</strong> Main application framework (Java 17/21)</li>
+                            <li><strong>OpenCV:</strong> Computer vision algorithms for object detection</li>
+                            <li><strong>Gradle:</strong> Build system and dependency management</li>
+                            <li><strong>Frame Grabber API:</strong> Real-time ultrasound data acquisition</li>
+                        </ul>
+
+                        <h3>Algorithm Configuration</h3>
+                        <p>The UI allows real-time adjustment of critical parameters:</p>
+                        <ul>
+                            <li>Detection thresholds</li>
+                            <li>Minimum/maximum object sizes</li>
+                            <li>Preprocessing filters</li>
+                            <li>Calibration factors</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Challenges & Solutions</h2>
+                    <div class="content">
+                        <h3>Ultrasound Image Quality</h3>
+                        <p><strong>Challenge:</strong> Ultrasound images contain significant noise, speckle artifacts, and acoustic shadows that can interfere with object detection.</p>
+                        <p><strong>Solution:</strong> Implemented automatic preprocessing with adaptive thresholding to enhance image quality before detection.</p>
+
+                        <h3>Real-time Performance</h3>
+                        <p><strong>Challenge:</strong> Object detection needs to run in real-time during procedures without lag.</p>
+                        <p><strong>Solution:</strong> Optimized algorithm parameters and used efficient OpenCV implementations to maintain real-time frame rates.</p>
+
+                        <h3>Calibration Accuracy</h3>
+                        <p><strong>Challenge:</strong> Converting pixel measurements to millimeters requires accurate calibration for each ultrasound setup.</p>
+                        <p><strong>Solution:</strong> Developed a calibration system using known reference markers in the water bath.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Impact & Applications</h2>
+                    <div class="content">
+                        <p>This work enables several clinical applications:</p>
+                        <ul>
+                            <li><strong>Needle Guidance:</strong> Automatic detection and tracking of needles during biopsies and injections</li>
+                            <li><strong>Anatomical Landmark Detection:</strong> Identifying key structures for surgical planning</li>
+                            <li><strong>Measurement Tools:</strong> Accurate distance measurements for clinical decision-making</li>
+                            <li><strong>Quality Assurance:</strong> Automated verification of instrument placement</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Future Work</h2>
+                    <div class="content">
+                        <ul>
+                            <li>Deep learning-based object detection for improved accuracy</li>
+                            <li>3D reconstruction from multiple ultrasound views</li>
+                            <li>Integration with robotic surgical systems</li>
+                            <li>Validation on clinical datasets with expert annotations</li>
+                            <li>Multi-object tracking across frames</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Resources</h2>
+                    <div class="content">
+                        <ul>
+                            <li>
+                                <a href="https://github.com/kidis-sako/IGTPrototypingTool-ObjectDetection" target="_blank">IGTPrototypingTool-ObjectDetection Repository</a>
+                                <p>Source code and implementation details</p>
+                            </li>
+                            <li>
+                                <a href="https://docs.opencv.org/4.x/dd/d1a/group__imgproc__feature.html#ga47849c3be0d0406ad3ca45db65a25d2d" target="_blank">OpenCV Hough Circle Transform</a>
+                                <p>Documentation for circle detection algorithm</p>
+                            </li>
+                            <li>
+                                <a href="https://docs.opencv.org/3.4/d9/d0c/group__calib3d.html#ga50620f0e26e02caa2e9adc07b5fbf24e" target="_blank">OpenCV RANSAC</a>
+                                <p>RANSAC implementation for robust line fitting</p>
+                            </li>
+                            <li>
+                                <a href="https://docs.opencv.org/4.x/d9/db0/tutorial_hough_lines.html" target="_blank">OpenCV Hough Line Transform Tutorial</a>
+                                <p>Guide to line detection algorithms</p>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load project data dynamically
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectData = getProjectData('ultrasound-object-detection');
+            
+            // Populate header with description before tags and date
+            const headerElement = document.getElementById('project-header');
+            headerElement.innerHTML = `
+                <h1>${projectData.title}</h1>
+                <div class="project-description" style="margin: 20px 0;">
+                    <p>${projectData.description}</p>
+                </div>
+                <div class="project-meta">
+                    <p>${projectData.dateLabel}: ${projectData.date}</p>
+                    <div class="project-tags">
+                        ${projectData.tags.map(tag => `<span class="tag">${tag}</span>`).join('\n                        ')}
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
+
