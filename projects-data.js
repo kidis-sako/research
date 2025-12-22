@@ -2,8 +2,8 @@
 const PROJECTS_DATA = {
     'surfing-paper': {
         id: 'surfing-paper',
-        title: 'Surfing Maneuver Recognition using Transfer Learning with S3D CNNs',
-        description: 'Automated surfing maneuver recognition using transfer learning with the S3D architecture. We leverage a pretrained S3D model from the Kinetics-400 dataset to achieve 75.36% test accuracy with only 4,100 trainable parameters.',
+        title: 'Surfing Maneuver Recognition: When Static Image Features Outperform Spatiotemporal 3D Models',
+        description: 'We compare 2D and 3D convolutional architectures for surfing maneuver recognition in a small-data regime. Contrary to common assumptions in video action recognition, a 2D CNN pretrained on ImageNet outperforms a spatiotemporal 3D CNN pretrained on Kinetics-400 by a large margin.',
         tags: ['Computer Vision', 'Transfer Learning', 'Video Recognition', 'S3D'],
         date: 'November 2025',
         dateLabel: 'Completed',
@@ -21,7 +21,7 @@ const PROJECTS_DATA = {
         image: 'images/kidis_leg_segmentation.gif',
         imageAlt: 'Ultrasound bone segmentation',
         url: 'topics/ultrasound-bone-segmentation.html',
-        locked: true,
+        locked: false,
         lockReason: 'Confidential medical research data and proprietary algorithms'
     },
     'wall-segmentation': {
