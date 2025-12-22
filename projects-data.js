@@ -7,7 +7,7 @@ const PROJECTS_DATA = {
         tags: ['Computer Vision', 'Transfer Learning', 'Video Recognition', 'S3D'],
         date: 'November 2025',
         dateLabel: 'Completed',
-        image: 'images/surfing_frames.png',
+        image: 'images/gradcam_roller.png',
         imageAlt: 'Surfing maneuver recognition paper',
         url: 'topics/surfing_maneuver_recognition_s3d_transfer_learning.pdf'
     },
