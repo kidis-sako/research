@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Research Project - Ultrasound Bone Segmentation for Prosthesis Design</title>
+    <title>Research Project - 2D+t Temporal Segmentation for Ultrasound-Based Prosthesis Design</title>
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="topic-styles.css">
     <link rel="stylesheet" href="ultrasound-segmentation-styles.css">
@@ -19,37 +19,12 @@
                 <!-- Header content will be loaded dynamically -->
             </div>
 
-            <!-- Security Lock Overlay -->
-            <div id="security-overlay" class="security-overlay">
-                <div class="lock-container">
-                    <div class="lock-icon">🔒</div>
-                    <h2>Content Restricted</h2>
-                    <p class="restriction-message">
-                        This project contains sensitive medical research data and proprietary algorithms. 
-                        Access is restricted due to confidentiality agreements and ongoing patent applications.
-                    </p>
-                    <div class="security-notice">
-                        <p><strong>Reason for Restriction:</strong></p>
-                        <ul>
-                            <li>Confidential medical imaging algorithms</li>
-                            <li>Proprietary prosthesis design methodology</li>
-                            <li>Pending patent applications</li>
-                            <li>Non-disclosure agreements with medical partners</li>
-                        </ul>
-                    </div>
-                    <div class="contact-info">
-                        <p>For access inquiries, please contact the research team.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Hidden Content Container -->
-            <div id="hidden-content" class="hidden-content" style="display: none;">
+            <div id="content-container">
 
                 <section class="section">
-                    <h2>⚠️ Confidentiality Notice</h2>
+                    <h2>Confidentiality Notice</h2>
                     <div class="content">
-                        <p>This is a confidential project, so I can't share code or sensitive details. What I'm sharing here is a high-level methodology and technical considerations for approaching this problem.</p>
+                        <p>This is a confidential project, so I can't share code or sensitive details before the project is published. What I'm sharing here is a high-level methodology and technical considerations for approaching this problem.</p>
                     </div>
                 </section>
 
@@ -63,67 +38,105 @@
                 </section>
 
                 <section class="section">
-                    <h2>Methodology: nnU-Net for Medical Segmentation</h2>
+                    <h2>The 2D+t Approach: Time as the Depth Dimension</h2>
                     <div class="content">
-                        <p><strong>nnU-Net v2</strong> is widely regarded as the gold standard for medical image segmentation. Key advantages for ultrasound applications:</p>
+                        <p>Instead of processing ultrasound frames independently, this project implements a <strong>2D+t temporal approach</strong> where video sequences are treated as 3D volumes:</p>
                         <ul>
-                            <li>Self-configuring architecture that adapts to different datasets without manual tuning</li>
-                            <li>Proven performance in medical imaging benchmarks</li>
-                            <li>Robust handling of ultrasound-specific artifacts (speckle noise, acoustic shadows)</li>
-                            <li>Effective even with limited training data</li>
+                            <li><strong>X-axis:</strong> Image width</li>
+                            <li><strong>Y-axis:</strong> Image height</li>
+                            <li><strong>Z-axis (depth):</strong> Time dimension (frame sequence)</li>
+                        </ul>
+
+                        <p>This spatiotemporal representation allows the network to learn from neighboring frames during training, capturing both spatial bone structures and temporal motion patterns.</p>
+
+                        <div class="margin-note">
+                            <strong>Why 2D+t?</strong> Treating time as a spatial dimension enables the model to learn temporal patterns, leading to more stable predictions.
+                        </div>
+
+                        <p><strong>Key advantages of the 2D+t approach:</strong></p>
+                        <ul>
+                            <li><strong>Temporal consistency:</strong> Predictions remain stable across consecutive frames, eliminating flickering artifacts</li>
+                            <li><strong>Context-aware segmentation:</strong> The network sees neighboring frames, improving accuracy in challenging regions</li>
+                            <li><strong>Motion pattern learning:</strong> Captures how bone structures appear during probe movement</li>
+                            <li><strong>Clinical realism:</strong> Mirrors the continuous nature of real ultrasound examinations</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Implementation: nnU-Net with 3D Temporal Architecture</h2>
+                    <div class="content">
+                        <p><strong>nnU-Net v2</strong> serves as the backbone architecture, configured for 3D spatiotemporal processing:</p>
+                        <ul>
+                            <li>Self-configuring 3D U-Net architecture optimized for temporal ultrasound data</li>
+                            <li>3D convolutions capture spatiotemporal features across frame sequences</li>
+                            <li>Custom preprocessing pipeline: videos converted to 3D NIfTI volumes (H × W × T)</li>
+                            <li>Temporal spacing calibrated to actual ultrasound frame rate (20 FPS)</li>
+                            <li>Spatial spacing derived from probe calibration (0.054 mm/pixel)</li>
                         </ul>
 
                         <div class="margin-note">
-                            <strong>Technical Note:</strong> nnU-Net's automatic configuration includes preprocessing, network architecture selection, and training strategy optimization based on dataset properties.
+                            <strong>Technical Implementation:</strong> Each video becomes a single 3D training case, improving temporal coherence.
                         </div>
                     </div>
                 </section>
 
                 <section class="section">
-                    <h2>Data Considerations</h2>
+                    <h2>Data Pipeline: From Video to 3D Volumes</h2>
                     <div class="content">
-                        <p>For ultrasound bone segmentation, combining multiple data sources can improve model robustness:</p>
+                        <p>The 2D+t approach requires a specialized data conversion pipeline:</p>
+                        
+                        <p><strong>Video to 3D NIfTI Conversion:</strong></p>
                         <ul>
-                            <li><strong>Project-specific data:</strong> Custom collected images for the target application</li>
-                            <li><strong>Large-scale datasets:</strong> The <a href="https://arxiv.org/pdf/2502.03783" target="_blank">UltraBones100k dataset</a> offers over 100,000 labeled ultrasound images with diverse bone structures</li>
+                            <li>Extract all frames from ultrasound video sequences</li>
+                            <li>Stack frames chronologically to form 3D volumes (Height × Width × Time)</li>
+                            <li>Set proper voxel spacing: spatial (0.054 mm/pixel) and temporal (based on 20 FPS)</li>
+                            <li>Save each video as a single 3D NIfTI file for training</li>
                         </ul>
 
-                        <p>The UltraBones100k dataset's automated labeling method and anatomical diversity provide a strong foundation for generalization across different ultrasound devices and patient variations.</p>
+                        <p><strong>Training Dataset:</strong></p>
+                        <ul>
+                            <li><strong>Foundation data:</strong> <a href="https://arxiv.org/pdf/2502.03783" target="_blank">UltraBones100k dataset</a> with 100,000+ labeled ultrasound frames across diverse anatomies</li>
+                            <li><strong>Project-specific data:</strong> Custom collected video sequences from residual limb scans</li>
+                            <li><strong>Dataset structure:</strong> 14 cadaver specimens with multiple scan trajectories per limb</li>
+                        </ul>
+
+                        <div class="margin-note">
+                            <strong>Data Transformation:</strong> The 2D+t method organizes data as temporal video volumes instead of independent frames.
+                        </div>
                     </div>
                 </section>
 
                 <section class="section">
-                    <h2>Early Results</h2>                    <div class="content">
-                        <p>Initial testing demonstrates the feasibility of this approach:</p>
+                    <h2>Results: Temporal Consistency in Action</h2>                    <div class="content">
+                        <p>The 2D+t temporal approach demonstrates superior performance compared to frame-independent 2D methods:</p>
 
                         <div class="video-container">
-                            <img src="../images/kidis_leg_segmentation.gif" alt="Bone segmentation on ultrasound scan">
-                            <p style="font-style: italic; margin-top: 10px;">Example: Automated bone structure identification in ultrasound imaging</p>
+                            <img src="../images/kidis_leg_segmentation.gif" alt="2D+t temporal bone segmentation on ultrasound video">
+                            <p style="font-style: italic; margin-top: 10px;">Example: Temporally consistent bone segmentation across ultrasound video sequence</p>
                         </div>
 
-                        <p>Key observations from early experiments:</p>
+                        <p><strong>Qualitative improvements observed:</strong></p>
                         <ul>
-                            <li>Stable segmentation across varying scan angles and depths</li>
-                            <li>Robust performance despite common ultrasound artifacts (shadows, speckle noise)</li>
-                            <li>Real-time processing capability for clinical workflow integration</li>
+                            <li><strong>Temporal stability:</strong> Smooth, flicker-free segmentation masks across consecutive frames</li>
+                            <li><strong>Motion coherence:</strong> Network understands bone movement patterns during probe scanning</li>
+                            <li><strong>Artifact resilience:</strong> Better handling of ultrasound shadows and speckle noise through temporal context</li>
+                            <li><strong>Edge refinement:</strong> More accurate bone boundaries by leveraging information from neighboring timepoints</li>
                         </ul>
 
                         <div class="margin-note">
-                            <strong>Note:</strong> These results represent initial feasibility testing focused on bone segmentation.
+                            <strong>2D vs 2D+t:</strong> The 2D+t method ensures temporal coherence while maintaining comparable accuracy.
                         </div>
                     </div>
                 </section>
 
                 <section class="section">
-                    <h2>Why This Matters</h2>                    <div class="content">
-                        <p>If validated at scale, this methodology could offer several advantages:</p>
-                        <ul>
-                            <li>Reduced inter-practitioner variability in measurements</li>
-                            <li>Improved prosthesis fit accuracy</li>
-                            <li>Shorter design cycle times</li>
-                            <li>Remote analysis capabilities for underserved areas</li>
-                            <li>Lower dependency on specialized technician availability</li>
-                        </ul>
+                    <h2>Clinical Impact</h2>                    <div class="content">
+                        <p>The 2D+t approach enables temporal consistency essential for 3D reconstruction from tracked ultrasound sweeps. This provides automated, reproducible measurements for improved prosthesis fit and accuracy.</p>
+
+                        <div class="margin-note">
+                            <strong>Future:</strong> Integration with probe tracking for full 3D bone reconstruction and multi-class tissue segmentation.
+                        </div>
                     </div>
                 </section>
 
@@ -132,109 +145,8 @@
     </div>
 
     <script>
-        // Security and obfuscation functions
-        function obfuscateString(str) {
-            return btoa(str).split('').reverse().join('');
-        }
-        
-        function deobfuscateString(str) {
-            return atob(str.split('').reverse().join(''));
-        }
-        
-        // Security validation
-        function validateAccess() {
-            // Multiple security checks
-            const checks = [
-                () => window.location.hostname === 'localhost' || window.location.hostname.includes('github.io'),
-                () => !window.location.search.includes('debug'),
-                () => !window.location.search.includes('bypass'),
-                () => !document.cookie.includes('bypass_security'),
-                () => !localStorage.getItem('security_bypass'),
-                () => !sessionStorage.getItem('security_bypass'),
-                () => Date.now() > new Date('2025-01-01').getTime(), // Time-based check
-                () => !window.location.hash.includes('unlock'),
-                () => navigator.userAgent.indexOf('bot') === -1, // Block bots
-                () => !window.location.protocol.includes('file:') // Block local file access
-            ];
-            
-            return checks.every(check => {
-                try {
-                    return check();
-                } catch (e) {
-                    return false;
-                }
-            });
-        }
-        
-        // Anti-tampering measures
-        function setupSecurityMeasures() {
-            // Prevent right-click context menu
-            document.addEventListener('contextmenu', e => e.preventDefault());
-            
-            // Prevent F12, Ctrl+Shift+I, Ctrl+U, Ctrl+S, Ctrl+A
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'F12' || 
-                    (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-                    (e.ctrlKey && e.key === 'u') ||
-                    (e.ctrlKey && e.key === 's') ||
-                    (e.ctrlKey && e.key === 'a') ||
-                    (e.ctrlKey && e.key === 'p')) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
-            
-            // Prevent text selection
-            document.addEventListener('selectstart', e => e.preventDefault());
-            
-            // Prevent drag and drop
-            document.addEventListener('dragstart', e => e.preventDefault());
-            document.addEventListener('drop', e => e.preventDefault());
-            
-            // Detect developer tools
-            let devtools = {open: false, orientation: null};
-            setInterval(function() {
-                if (window.outerHeight - window.innerHeight > 200 || 
-                    window.outerWidth - window.innerWidth > 200) {
-                    if (!devtools.open) {
-                        devtools.open = true;
-                        document.body.style.display = 'none';
-                        document.body.innerHTML = '<div style="text-align:center;padding:50px;"><h1>Access Denied</h1><p>Developer tools detected. This content is protected.</p></div>';
-                    }
-                }
-            }, 500);
-            
-            // Obfuscate content in DOM and load from secure source
-            const contentElements = document.querySelectorAll('#hidden-content *');
-            contentElements.forEach(el => {
-                if (el.textContent) {
-                    el.setAttribute('data-obfuscated', obfuscateString(el.textContent));
-                    el.textContent = '';
-                }
-            });
-            
-            // Additional security: Clear any remaining text content
-            setTimeout(() => {
-                const allTextNodes = document.querySelectorAll('#hidden-content *');
-                allTextNodes.forEach(node => {
-                    if (node.textContent && node.textContent.trim()) {
-                        node.textContent = '';
-                        node.style.display = 'none';
-                    }
-                });
-            }, 100);
-        }
-        
         // Load project data dynamically
         document.addEventListener('DOMContentLoaded', function() {
-            // Security check
-            if (!validateAccess()) {
-                document.body.innerHTML = '<div style="text-align:center;padding:50px;"><h1>Access Denied</h1><p>Unauthorized access attempt detected.</p></div>';
-                return;
-            }
-            
-            setupSecurityMeasures();
-            
             const projectData = getProjectData('ultrasound-bone-segmentation');
             
             // Populate header with description before tags and date
@@ -251,10 +163,6 @@
                     </div>
                 </div>
             `;
-            
-            // Ensure overlay is always visible
-            document.getElementById('security-overlay').style.display = 'block';
-            document.getElementById('hidden-content').style.display = 'none';
         });
     </script>
 </body>

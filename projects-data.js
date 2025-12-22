@@ -24,17 +24,15 @@ const PROJECTS_DATA = {
     },
     'ultrasound-bone-segmentation': {
         id: 'ultrasound-bone-segmentation',
-        title: 'Ultrasound Bone Segmentation for Prosthesis Design',
-        description: 'Using nnU-Net v2 to automatically segment bone and tissue from ultrasound scans for prosthesis design. This has the potential to revolutionize prosthetic fitting by making it faster, more accurate, and accessible to patients worldwide.',
-        tags: ['Medical Imaging', 'nnU-Net', 'Ultrasound', 'Segmentation'],
-        date: 'October 2025',
+        title: '2D+t Temporal Segmentation for Ultrasound-Based Prosthesis Design',
+        description: 'Innovative 2D+t approach using nnU-Net v2 where time becomes the depth dimension for spatiotemporal bone segmentation in ultrasound videos. This temporal 3D method ensures frame-to-frame consistency and captures motion patterns for improved prosthetic fitting.',
+        tags: ['Medical Imaging', 'nnU-Net', 'Spatiotemporal', '2D+t', 'Ultrasound'],
+        date: 'December 2025',
         dateLabel: 'Last update',
         image: 'images/kidis_leg_segmentation.gif',
-        imageAlt: 'Ultrasound bone segmentation',
-        url: 'topics/ultrasound-bone-segmentation.html',
-        locked: false,
-        lockReason: 'Confidential medical research data and proprietary algorithms'
-    },
+        imageAlt: '2D+t temporal ultrasound bone segmentation',
+        url: 'topics/ultrasound-bone-segmentation.html'
+        },
     'ultrasound-object-detection': {
         id: 'ultrasound-object-detection',
         title: 'Ultrasound Object Detection for Image-Guided Therapy',
