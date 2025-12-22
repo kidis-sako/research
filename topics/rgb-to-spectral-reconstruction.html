@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Project - RGB-to-Spectral Reconstruction for Medical Endoscopy</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="topic-styles.css">
+    <script src="../projects-data.js"></script>
+</head>
+<body>
+    <div class="notebook">
+        <div class="notebook-page">
+            <a href="../index.html" class="back-link">← Back to Projects</a>
+            
+            <div class="project-header" id="project-header">
+                <!-- Header content will be loaded dynamically -->
+            </div>
+
+            <div class="handwritten">
+                <section class="section">
+                    <h2>Abstract</h2>
+                    <div class="content">
+                        <p>Spectral imaging reveals tissue characteristics invisible to standard RGB cameras, making it valuable for early disease detection in medical endoscopy. However, hyperspectral sensors cannot fit inside swallowable capsule cameras due to size and power constraints. This research investigates whether spectral information can be reconstructed from standard RGB images using both classical physics-based methods and machine learning approaches.</p>
+                        
+                        <p>I evaluated two approaches: (1) a multi-filter method using 16 optical filters with ridge regularization, validated against spectrometer measurements, and (2) a neural network trained on the SPECTRALPACA medical dataset achieving R² = 0.994 for cross-subject generalization within palm tissue.</p>
+                        
+                        <p>While ML methods show excellent in-domain performance, stress testing with synthetic perfect red images revealed that models trained only on healthy tissue hallucinate spectral features when encountering unfamiliar inputs. This highlights a critical safety concern for clinical deployment: models learn domain-specific patterns rather than universal optical physics.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Background</h2>
+                    <div class="content">
+                        <h3>The Problem: Clinical Needs vs Hardware Constraints</h3>
+                        <p>Wireless Capsule Endoscopy (WCE) revolutionized gastrointestinal diagnosis by allowing patients to swallow a vitamin-pill-sized camera that travels through the digestive tract. However, these capsules use standard RGB cameras that miss subtle spectral details crucial for detecting early tissue abnormalities like changes in vascular structure or oxygenation levels.</p>
+                        
+                        <div class="results-gallery">
+                            <div class="result-item">
+                                <img src="../images/capsule.jpg" alt="Wireless capsule endoscopy">
+                                <p>Capsule endoscopy device and its path through the GI tract</p>
+                            </div>
+                            <div class="result-item">
+                                <img src="../images/capsule-abnormalities.png" alt="Various abnormalities captured">
+                                <p>Various GI abnormalities showing tissue type diversity</p>
+                            </div>
+                        </div>
+
+                        <h3>RGB vs Spectral Imaging</h3>
+                        <p>RGB cameras capture only three broad color bands, compressing wavelength information into a "summary" of light. In contrast, spectral imaging captures many narrow wavelength bands (often 16-200), preserving the full spectral "fingerprint" of materials. This fingerprint reveals:</p>
+                        <ul>
+                            <li>Distinct signatures for visually similar tissues</li>
+                            <li>Oxygenation levels in blood vessels</li>
+                            <li>Early pathological changes invisible to RGB cameras</li>
+                        </ul>
+
+                        <div class="results-gallery">
+                            <div class="result-item">
+                                <img src="../images/example-rgb-to-spectral-wavelength.png" alt="RGB vs Spectral comparison">
+                                <p>RGB integrates light across broad bands vs spectral imaging resolving full reflectance curves</p>
+                            </div>
+                        </div>
+
+                        <div class="margin-note">
+                            <strong>Key Challenge:</strong> Hyperspectral cameras are too large and power-hungry for capsule miniaturization. Can we mathematically recover spectral data from standard RGB images?
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Research Questions</h2>
+                    <div class="content">
+                        <ol>
+                            <li><strong>Classical reconstruction:</strong> Can multi-filter imaging reconstruct spectral curves matching spectrometer measurements?</li>
+                            
+                            <li><strong>ML performance:</strong> Can neural networks accurately predict spectral signatures from RGB inputs?</li>
+                            
+                            <li><strong>Generalization:</strong> How do models perform on inputs different from training data?</li>
+                        </ol>
+
+                        <div class="margin-note">
+                            <strong>Goal:</strong> Develop mapping f: ℝ³(RGB) → ℝ¹⁶⁺(Spectrum) to reconstruct spectral signatures from RGB images.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Methodology</h2>
+                    <div class="content">
+                        <h3>Study 1: Classical Multi-Filter Approach</h3>
+                        <ul>
+                            <li>16 optical filters with known transmission characteristics</li>
+                            <li>16 filters × 3 RGB channels = 48 measurements per sample</li>
+                            <li>Ridge regularization for inverse problem solving</li>
+                            <li>Validated against spectrometer ground truth</li>
+                        </ul>
+
+                        <div class="results-gallery">
+                            <div class="result-item">
+                                <img src="../images/filter-transmission.png" alt="Filter transmission curve">
+                                <p>Filter transmission curve across visible spectrum (400-700 nm)</p>
+                            </div>
+                        </div>
+
+                        <h3>Study 2: Machine Learning Approach (SPECTRALPACA)</h3>
+                        <ul>
+                            <li>SPECTRALPACA: Hyperspectral videos of human palm tissue, 10 participants</li>
+                            <li>16 wavelength bands (465-641 nm), 272×512 pixel resolution</li>
+                            <li>Split: Subjects 1-5 training (500K pixels), Subject 6 testing (100K pixels)</li>
+                            <li>Limitation: Synthetic RGB (idealized, no camera noise)</li>
+                            <li>Architecture: MLP with attention - Input(3) → FC(512) → FC(256) → FC(128) → Output(16)</li>
+                            <li>Loss: Combined MSE, Weighted MSE, and Spectral Angle Mapper</li>
+                        </ul>
+
+                        <h3>Study 3: Generalization Stress Test</h3>
+                        <p>Applied model to synthetic "perfect red" image (RGB: [253, 6, 14]) - far outside training distribution.</p>
+                    </div>
+                </section>
+
+
+                <section class="section">
+                    <h2>Results</h2>
+                    <div class="content">
+                        <h3>Study 1: Multi-Filter Reconstruction</h3>
+                        
+                        <div class="results-gallery">
+                            <div class="result-item">
+                                <img src="../images/reconstructed-spectrum.png" alt="Reconstructed spectrum">
+                                <p>Reconstructed spectral reflectance</p>
+                            </div>
+                            <div class="result-item">
+                                <img src="../images/spectrometer-validation.png" alt="Spectrometer validation">
+                                <p>Spectrometer ground truth</p>
+                            </div>
+                        </div>
+
+                        <ul>
+                            <li><span style="color: green;">Success:</span> Shape matches ground truth</li>
+                            <li><span style="color: orange;">Smoothing:</span> Fine details smoothed by regularization</li>
+                            <li><span style="color: red;">Limitation:</span> 16-filter wheel impractical for capsules</li>
+                        </ul>
+
+                        <h3>Study 2: Neural Network Performance</h3>
+                        
+                        <div class="results-gallery">
+                            <div class="result-item">
+                                <img src="../images/spectralpaca-performance.png" alt="SPECTRALPACA performance">
+                                <p>Performance metrics: Predicted vs Ground Truth, Error Distribution, Per-Wavelength RMSE</p>
+                            </div>
+                        </div>
+
+                        <p><strong>Metrics on held-out Subject 6:</strong></p>
+                        <ul>
+                            <li>R² = 0.994, Pearson = 0.998, RMSE = 6.65</li>
+                            <li>Highest errors at boundaries (465nm, 641nm) and RGB overlap gaps (585nm)</li>
+                        </ul>
+
+                        <div class="results-gallery">
+                            <div class="result-item">
+                                <img src="../images/subject-06-frame-combined.png" alt="Frame-level comparison">
+                                <p>RGB image and spectral signature: prediction (dashed) vs ground truth (solid)</p>
+                            </div>
+                        </div>
+
+                        <h3>Study 3: Generalization Stress Test</h3>
+                        
+                        <div class="results-gallery">
+                            <div class="result-item">
+                                <img src="../images/perfect-red-prediction.png" alt="Perfect red prediction">
+                                <p>Perfect red prediction showing correct red intensity but hallucinated blue peak</p>
+                            </div>
+                        </div>
+
+                        <ul>
+                            <li><span style="color: green;">Correct:</span> High red intensity (598-641nm)</li>
+                            <li><span style="color: red;">Failure:</span> Hallucinated blue peak at 493nm</li>
+                            <li><span style="color: red;">Failure:</span> Insufficient blue-green absorption</li>
+                        </ul>
+
+                        <div class="margin-note">
+                            <strong>Critical Finding:</strong> Model hallucinated features based on skin training data, not optical physics. Potential safety risk for clinical deployment.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Analysis</h2>
+                    <div class="content">
+                        <h3>Comparison: Classical vs Machine Learning</h3>
+                        
+                        <table class="algorithm-table">
+                            <thead>
+                                <tr>
+                                    <th>Feature</th>
+                                    <th>Multi-Filter (Classical)</th>
+                                    <th>Machine Learning</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Mechanism</strong></td>
+                                    <td>Physics-based (inverse problem)</td>
+                                    <td>Data-driven (learned patterns)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Hardware</strong></td>
+                                    <td>Complex (16 filters)</td>
+                                    <td>Simple (standard RGB)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>In-Domain Accuracy</strong></td>
+                                    <td>Good (matches spectrometer shape)</td>
+                                    <td>Excellent (R² = 0.994)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Generalization</strong></td>
+                                    <td>Robust (based on physics)</td>
+                                    <td><span style="color: red;">Fragile (data-dependent)</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Capsule Suitability</strong></td>
+                                    <td><span style="color: red;">Low (size constraints)</span></td>
+                                    <td>High (standard camera)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Fine Details</strong></td>
+                                    <td>Smoothed (regularization)</td>
+                                    <td>Better preservation</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Key Insights</h3>
+                        <ul>
+                            <li>Both approaches demonstrate RGB-to-spectral reconstruction is feasible</li>
+                            <li>ML achieves R² > 0.99 when test matches training distribution</li>
+                            <li>Models hallucinate on unfamiliar inputs - potential clinical hazard</li>
+                            <li>Trade-off: ML enables miniaturization but lacks physics-based robustness</li>
+                        </ul>
+
+                        <h3>Limitations</h3>
+                        <ul>
+                            <li>Synthetic RGB without camera noise or compression artifacts</li>
+                            <li>Only healthy palm tissue - no pathological samples or GI tissue</li>
+                            <li>Limited to 16 bands (465-641nm) vs full hyperspectral</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Challenges</h2>
+                    <div class="content">
+                        <ul>
+                            <li>Underdetermined inverse problem: 16+ spectral values from 3 RGB measurements</li>
+                            <li>Edge wavelength errors at boundaries (465nm, 641nm)</li>
+                            <li>Limited training diversity: only healthy palm tissue</li>
+                            <li>Hallucination on unfamiliar inputs could cause misdiagnosis</li>
+                            <li>Need pathological data: tumors, inflammation, bleeding, GI tissues</li>
+                            <li>Validation required with real capsule camera images (noise, compression)</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Future Work</h2>
+                    <div class="content">
+                        <ul>
+                            <li>Collect hyperspectral data from actual GI tissue including pathological conditions</li>
+                            <li>Test with real capsule camera images (noise, compression, aberrations)</li>
+                            <li>Implement uncertainty quantification and out-of-distribution detection</li>
+                            <li>Expand to full hyperspectral range (60+ bands, 400-700nm)</li>
+                            <li>Clinical validation studies with gastroenterology departments</li>
+                            <li>Explore physics-informed neural networks and ensemble methods</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>References</h2>
+                    <div class="content">
+                        <ul>
+                            <li>Iddan, G., et al. (2000). "Wireless capsule endoscopy." Nature, 405(6785), 417.</li>
+                            <li>Ayala, L., et al. (2024). "SPECTRALPACA: A hyperspectral imaging dataset of human skin." DKFZ.</li>
+                            <li>Arad, B., & Ben-Shahar, O. (2016). "Sparse recovery of hyperspectral signal from natural RGB images." ECCV.</li>
+                            <li>Wang, X., et al. (2018). "Prior-to-prior regularized multi-spectral reconstruction." CVPR.</li>
+                            <li>Shrestha, R., et al. (2013). "Multispectral imaging using a stereo camera: concept, design and assessment." EURASIP Journal.</li>
+                            <li>Namikawa, K., et al. (2020). "Utilizing artificial intelligence in endoscopy." Journal of Gastroenterology.</li>
+                            <li>LEE Filters. "Professional Lighting Filter Transmission Curves." Manufacturer specification sheets.</li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load project data dynamically
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectData = getProjectData('rgb-to-spectral-reconstruction');
+            
+            // Populate header with description before tags and date
+            const headerElement = document.getElementById('project-header');
+            headerElement.innerHTML = `
+                <h1>${projectData.title}</h1>
+                <div class="project-description" style="margin: 20px 0;">
+                    <p>${projectData.description}</p>
+                </div>
+                <div class="project-meta">
+                    <p>${projectData.dateLabel}: ${projectData.date}</p>
+                    <div class="project-tags">
+                        ${projectData.tags.map(tag => `<span class="tag">${tag}</span>`).join('\n                        ')}
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
+

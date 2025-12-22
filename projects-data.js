@@ -11,6 +11,17 @@ const PROJECTS_DATA = {
         imageAlt: 'Surfing maneuver recognition paper',
         url: 'topics/surfing_maneuver_recognition_s3d_transfer_learning.pdf'
     },
+    'rgb-to-spectral-reconstruction': {
+        id: 'rgb-to-spectral-reconstruction',
+        title: 'RGB-to-Spectral Reconstruction for Medical Endoscopy',
+        description: 'Evaluating filter-based and machine learning approaches to reconstruct spectral signatures from RGB images for capsule endoscopy. While ML achieves R² = 0.994 in-domain, stress testing reveals critical generalization limitations for clinical deployment.',
+        tags: ['Medical Imaging', 'Deep Learning', 'Spectral Imaging', 'Computer Vision'],
+        date: 'December 2025',
+        dateLabel: 'Completed',
+        image: 'images/spectralpaca-performance.png',
+        imageAlt: 'RGB-to-Spectral reconstruction performance',
+        url: 'topics/rgb-to-spectral-reconstruction.html'
+    },
     'ultrasound-bone-segmentation': {
         id: 'ultrasound-bone-segmentation',
         title: 'Ultrasound Bone Segmentation for Prosthesis Design',
