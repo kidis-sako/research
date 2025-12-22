@@ -2,8 +2,8 @@
 const PROJECTS_DATA = {
     'surfing-paper': {
         id: 'surfing-paper',
-        title: 'Surfing Maneuver Recognition: When Static Image Outperform Spatiotemporal 3D',
-        description: 'We compare 2D and 3D convolutional architectures for surfing maneuver recognition in a small-data regime. Contrary to common assumptions in video action recognition, a 2D CNN outperforms a spatiotemporal 3D CNN.',
+        title: 'Surfing Maneuver Recognition: When 2D Outperform Spatiotemporal 3D',
+        description: 'I compared 2D and 3D convolutional architectures for surfing maneuver recognition in a small-data regime. Contrary to common assumptions in video action recognition, a 2D CNN outperforms a spatiotemporal 3D CNN.',
         tags: ['Computer Vision', 'Transfer Learning', 'Video Recognition', 'S3D'],
         date: 'November 2025',
         dateLabel: 'Completed',
@@ -82,8 +82,8 @@ const PROJECTS_DATA = {
     'log-analysis-tool': {
         id: 'log-analysis-tool',
         title: 'Support Analysis Tool using Generative AI workflows',
-        description: 'Internal tool that uses LangChain SQL Agent to convert natural language questions into database queries, helping support teams diagnose issues 35% faster.',
-        tags: ['LangChain', 'NLP', 'Generative AI', 'Agents'],
+        description: 'Multi-agent workflow where agents communicate to retrieve data from Kibana Elasticsearch and databases, helping support teams diagnose issues 35% faster.',
+        tags: ['LangChain', 'Generative AI', 'Agents', 'Logs'],
         date: 'October 2025',
         dateLabel: 'Last update',
         image: 'images/langchain.png',
