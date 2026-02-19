@@ -25,7 +25,7 @@ const PROJECTS_DATA = {
     'log-analysis-tool': {
         id: 'log-analysis-tool',
         title: 'Support Analysis Tool using Generative AI workflows',
-        description: 'Multi-agent workflow where agents communicate to retrieve data from Kibana Elasticsearch and databases, helping support teams diagnose issues 35% faster.',
+        description: 'Multi-agent workflow where agents communicate to retrieve data from Kibana Elasticsearch and databases.',
         tags: ['LangChain', 'Generative AI', 'Agents', 'Logs'],
         date: 'October 2025',
         dateLabel: 'Last update',
