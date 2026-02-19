@@ -20,48 +20,14 @@
             <div class="handwritten">
 
                 <section class="section">
-                    <h2>⚠️ Confidentiality Notice</h2>
+                    <h2>Overview</h2>
                     <div class="content">
-                        <p>This is a confidential internal tool, so I can't share code, specific implementation details, or proprietary information. What I'm sharing here is a high-level overview of the methodology when working with complex databases.</p>
-                    </div>
-                </section>
+                        <p>This is a confidential internal tool: no code or proprietary details are shared here.</p>
 
-                <section class="section">
-                    <h2>The Problem</h2>
-                    <div class="content">
-                        <p>Support teams spend significant time manually analyzing system logs and databases to diagnose issues. This process is time-consuming, error-prone, and requires deep technical knowledge to trace through complex log files in Kibana Elasticsearch and database states simultaneously.</p>
-                        
-                        <p>I built an internal tool that automates this process using a multi-agent workflow, allowing support teams to quickly gather and analyze system information from both logs and databases without writing complex queries manually.</p>
-                    </div>
-                </section>
-
-                <section class="section">
-                    <h2>Multi-Agent Workflow Architecture</h2>
-                    <div class="content">
-                        <p>The tool implements a collaborative multi-agent system where specialized agents work together to provide comprehensive system analysis:</p>
-
-                        <h3>Agent Communication Workflow</h3>
-                        
-                        <p><strong>SQL Agent:</strong> Converts natural language questions into database queries using LangChain's SQL Agent framework. This agent retrieves structured data from relational databases, such as user information, system configurations, and transaction records.</p>
-
-                        <p><strong>Logs Analysis Agent:</strong> Connects to Kibana Elasticsearch to retrieve real-time log data. This agent queries indexed logs to understand what is happening in the system at runtime, including errors, warnings, and system events.</p>
-
-                        <p><strong>Agent Coordination:</strong> The agents communicate together in an orchestrated workflow. When a support question is asked, the system determines which agents need to be involved. For example, investigating a user issue might require the SQL Agent to fetch user details from the database while the Logs Analysis Agent retrieves recent error logs from Kibana for that user.</p>
+                        <p>A multi-agent system where a <strong>SQL Agent</strong> translates natural language into database queries and a <strong>Logs Analysis Agent</strong> retrieves real-time entries from Kibana Elasticsearch. The agents coordinate to combine structured data with log context, giving support teams a complete picture without writing queries manually.</p>
 
                         <div class="margin-note">
-                            <strong>Key Insight:</strong> By combining database state with real-time log analysis, the tool provides a complete picture of system behavior, reducing diagnosis time by 35%.
-                        </div>
-
-                        <h3>Technical Considerations</h3>
-
-                        <p><strong>Schema Synchronization:</strong> A challenge with database tools is keeping mappings current. One approach is integrating with version control systems to automatically detect when schema files change and trigger mapping updates.</p>
-
-                        <p><strong>Static vs. Dynamic Mappings:</strong> Using static mappings (like .hbm.xml files) can improve performance by reducing repeated schema lookups, though this requires a synchronization mechanism to stay current.</p>
-
-                        <p><strong>Elasticsearch Integration:</strong> The Logs Analysis Agent uses Elasticsearch queries to filter and retrieve relevant log entries. This requires careful query construction to handle the semi-structured nature of log data and ensure efficient searches across large log volumes.</p>
-
-                        <div class="margin-note">
-                            <strong>Note:</strong> LangChain's SQLDatabaseToolkit provides built-in methods for table discovery and schema retrieval, which simplifies the SQL Agent implementation.
+                            <strong>Result:</strong> 35% reduction in issue diagnosis time.
                         </div>
                     </div>
                 </section>
