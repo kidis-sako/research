@@ -88,28 +88,28 @@ const PROJECTS_DATA = {
         imageAlt: 'Ultrasound object detection with RANSAC line detection',
         url: 'topics/ultrasound-object-detection.html'
     },
-    // 'wall-segmentation': {
-    //     id: 'wall-segmentation',
-    //     title: 'Wall Segmentation in Floorplans using Mask R-CNN',
-    //     description: 'Training Mask R-CNN to detect and segment walls in floorplan images. This enables automated architectural analysis for construction applications.',
-    //     tags: ['Computer Vision', 'Deep Learning', 'Mask R-CNN', 'Segmentation'],
-    //     date: 'July 2024',
-    //     dateLabel: 'Completed',
-    //     image: 'images/bounding-boxes.png',
-    //     imageAlt: 'Wall segmentation bounding boxes',
-    //     url: 'topics/wall-segmentation.html'
-    // },
-    // 'wall-segmentation-geometric': {
-    //     id: 'wall-segmentation-geometric',
-    //     title: 'Wall Segmentation in Floorplans using Geometric Approach',
-    //     description: 'Using traditional computer vision techniques to segment walls in floorplans. This provides a lightweight, interpretable alternative to deep learning that works without training data.',
-    //     tags: ['Computer Vision', 'OpenCV','Geometric Processing', 'Segmentation'],
-    //     date: 'July 2024',
-    //     dateLabel: 'Completed',
-    //     image: 'images/colored-room-separation.jpg',
-    //     imageAlt: 'Room segmentation',
-    //     url: 'topics/wall-segmentation-geometric.html'
-    // },
+    'wall-segmentation': {
+        id: 'wall-segmentation',
+        title: 'Wall Segmentation in Floorplans using Mask R-CNN',
+        description: 'Mask R-CNN trained on floorplan images to detect and segment walls at pixel level for construction applications.',
+        tags: ['Computer Vision', 'Deep Learning', 'Mask R-CNN', 'Segmentation'],
+        date: 'July 2024',
+        dateLabel: 'Completed',
+        image: 'images/bounding-boxes.png',
+        imageAlt: 'Wall segmentation bounding boxes',
+        url: 'topics/wall-segmentation.html'
+    },
+    'wall-segmentation-geometric': {
+        id: 'wall-segmentation-geometric',
+        title: 'Wall Segmentation in Floorplans using Geometric Approach',
+        description: 'Traditional computer vision techniques for wall segmentation in floorplans, a lightweight alternative to deep learning that requires no training data.',
+        tags: ['Computer Vision', 'OpenCV', 'Geometric Processing', 'Segmentation'],
+        date: 'July 2024',
+        dateLabel: 'Completed',
+        image: 'images/colored-room-separation.jpg',
+        imageAlt: 'Room segmentation',
+        url: 'topics/wall-segmentation-geometric.html'
+    },
     'rnn-limerick-generation': {
         id: 'rnn-limerick-generation',
         title: 'Character-Level Limerick Generation with LSTM',

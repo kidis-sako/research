@@ -20,74 +20,11 @@
             <div class="handwritten">
 
                 <section class="section">
-                    <h2>A Different Approach</h2>
+                    <h2>Overview</h2>
                     <div class="content">
-                        <p>While deep learning methods like Mask R-CNN work great, they need lots of training data and computational power. I wanted to try something simpler: using traditional computer vision techniques based on geometry.</p>
-                        
-                        <p>The idea is straightforward: floorplans have predictable geometric properties. Walls are continuous lines with consistent thickness, rooms are bounded by straight walls, and everything follows a grid-like structure. Why not use these properties directly?</p>
+                        <p>This is a confidential project, no code or proprietary details are shared here.</p>
 
-                        <h3>Why This Works</h3>
-                        <ul>
-                            <li>No training data needed</li>
-                            <li>Much faster processing</li>
-                            <li>Easy to understand and debug</li>
-                            <li>Works well for clean, well-drawn floorplans</li>
-                        </ul>
-
-                        <div class="margin-note">
-                            <strong>Note:</strong> This approach works best with clean, well-drawn architectural plans that follow standard geometric conventions.
-                        </div>
-                    </div>
-                </section>
-
-                <section class="section">
-                    <h2>How It Works</h2>
-                    <div class="content">
-                        <p>The process has four main steps:</p>
-                        <ol>
-                            <li><strong>Preprocessing</strong> - Convert the image to binary (black and white) and invert it for better contour detection</li>
-                            <li><strong>Contour Processing</strong> - Remove small noise contours and identify the outer boundary</li>
-                            <li><strong>Corner Detection</strong> - Use Harris corner detection to find room corners, then draw lines to close gaps</li>
-                            <li><strong>Wall Extraction</strong> - Apply morphological operations to ensure uniform wall thickness and separate rooms</li>
-                        </ol>
-                    </div>
-                </section>
-
-                <section class="section">
-                    <h2>Results</h2>
-                    <div class="content">
-                        <div class="results-gallery">
-                            <div class="result-item">
-                                <h3>Input Floorplan</h3>
-                                <img src="../images/input-floorplan.jpg" alt="Input floorplan">
-                            </div>
-                            <div class="result-item">
-                                <h3>Room Segmentation</h3>
-                                <img src="../images/colored-room-separation.jpg" alt="Colored room separation">
-                            </div>
-                            <div class="result-item">
-                                <h3>Extracted Walls</h3>
-                                <img src="../images/walls-extracted.jpg" alt="Extracted walls">
-                            </div>
-                        </div>
-
-                        <div class="margin-note">
-                            <strong>Note:</strong> Works best with clean, well-drawn floorplans.
-                        </div>
-                    </div>
-                </section>
-
-                <section class="section">
-                    <h2>Limitations & Next Steps</h2>
-                    <div class="content">
-                        <p>This approach works well for clean floorplans, but it has some limitations:</p>
-                        <ul>
-                            <li>Sensitive to image quality and noise</li>
-                            <li>Struggles with very complex architectural elements</li>
-                            <li>Can't handle overlapping or ambiguous wall structures well</li>
-                        </ul>
-
-                        <p>For more complex cases, combining this with deep learning could work better check out my <a href="wall-segmentation.html">Mask R-CNN implementation</a> for comparison.</p>
+                        <p>A lightweight alternative to deep learning for wall segmentation. Uses contour processing, Harris corner detection, and morphological operations to extract walls from floorplan images without any training data. Works best with clean, well-drawn architectural plans.</p>
                     </div>
                 </section>
             </div>
@@ -95,30 +32,6 @@
     </div>
 
     <script>
-        function toggleCode(id) {
-            const content = document.getElementById(id);
-            content.classList.toggle('active');
-        }
-
-        function copyCode(id) {
-            const codeBlock = document.getElementById(id).querySelector('code');
-            const textArea = document.createElement('textarea');
-            textArea.value = codeBlock.textContent;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-            
-            // Show copied notification
-            const button = event.target;
-            const originalText = button.textContent;
-            button.textContent = 'Copied!';
-            setTimeout(() => {
-                button.textContent = originalText;
-            }, 2000);
-        }
-
-        // Load project data dynamically
         document.addEventListener('DOMContentLoaded', function() {
             const projectData = getProjectData('wall-segmentation-geometric');
             
