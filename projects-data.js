@@ -1,15 +1,15 @@
 // Centralized project metadata
 const PROJECTS_DATA = {
-    'ultrasound-bone-segmentation': {
-        id: 'ultrasound-bone-segmentation',
-        title: '2D+t Temporal Segmentation for Ultrasound-Based Prosthesis Design',
-        description: 'Innovative 2D+t approach using nnU-Net v2 where time becomes the depth dimension for spatiotemporal bone segmentation in ultrasound videos.',
-        tags: ['Medical Imaging', 'nnU-Net', 'Spatiotemporal', '2D+t', 'Ultrasound'],
+    'medical-structure-segmentation': {
+        id: 'medical-structure-segmentation',
+        title: '2D+t Temporal Segmentation for Medical Structure Analysis',
+        description: 'A 2D+t approach using nnU-Net v2 where time becomes the depth dimension, enabling spatiotemporal segmentation of anatomical structures in medical video sequences.',
+        tags: ['Medical Imaging', 'nnU-Net', 'Spatiotemporal', '2D+t', 'Segmentation'],
         date: 'October 2025',
         dateLabel: 'Last update',
         image: 'images/kidis_leg_segmentation.gif',
-        imageAlt: '2D+t temporal ultrasound bone segmentation',
-        url: 'topics/ultrasound-bone-segmentation.html'
+        imageAlt: '2D+t temporal medical structure segmentation',
+        url: 'topics/medical-structure-segmentation.html'
         },
     'surfing-paper': {
         id: 'surfing-paper',

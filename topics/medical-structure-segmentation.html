@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Project - 2D+t Temporal Segmentation for Medical Structure Analysis</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="topic-styles.css">
+    <link rel="stylesheet" href="ultrasound-segmentation-styles.css">
+    <script src="../projects-data.js"></script>
+    <script src="ultrasound-content-obfuscated.js"></script>
+</head>
+<body>
+    <div class="notebook">
+        <div class="notebook-page">
+            <a href="../index.html" class="back-link">&larr; Back to Projects</a>
+            
+            <div class="project-header" id="project-header">
+                <!-- Header content will be loaded dynamically -->
+            </div>
+
+            <div id="content-container">
+
+                <section class="section">
+                    <h2>Confidentiality Notice</h2>
+                    <div class="content">
+                        <p>This is a confidential project, so I can't share code or sensitive details before the project is published. What I'm sharing here is a high-level methodology and technical considerations for approaching this problem.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>The Challenge</h2>
+                    <div class="content">
+                        <p>Accurate segmentation of anatomical structures in medical video sequences is critical for clinical workflows such as surgical planning and device design. Traditional manual annotation is time-consuming and introduces variability between practitioners.</p>
+                        <p>Deep learning offers an opportunity to automate this process, but frame-by-frame approaches often produce temporally inconsistent results. This project explores a spatiotemporal strategy to address that limitation.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>The 2D+t Approach</h2>
+                    <div class="content">
+                        <p>Instead of processing frames independently, this project implements a <strong>2D+t temporal approach</strong> where video sequences are treated as 3D volumes:</p>
+                        <ul>
+                            <li><strong>X-axis:</strong> Image width</li>
+                            <li><strong>Y-axis:</strong> Image height</li>
+                            <li><strong>Z-axis (depth):</strong> Time dimension (frame sequence)</li>
+                        </ul>
+
+                        <p>This spatiotemporal representation allows the network to learn from neighboring frames, capturing both spatial structures and temporal motion patterns.</p>
+
+                        <div class="margin-note">
+                            <strong>Why 2D+t?</strong> Treating time as a spatial dimension enables the model to learn temporal patterns, leading to more stable predictions.
+                        </div>
+
+                        <p><strong>Key advantages:</strong></p>
+                        <ul>
+                            <li><strong>Temporal consistency:</strong> Predictions remain stable across consecutive frames, eliminating flickering artifacts</li>
+                            <li><strong>Context-aware segmentation:</strong> The network sees neighboring frames, improving accuracy in challenging regions</li>
+                            <li><strong>Motion pattern learning:</strong> Captures how structures appear during acquisition</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Implementation</h2>
+                    <div class="content">
+                        <p><strong>nnU-Net v2</strong> serves as the backbone, configured for 3D spatiotemporal processing. Video frames are stacked chronologically into 3D volumes and fed through 3D convolutions that capture features across both space and time.</p>
+
+                        <div class="margin-note">
+                            <strong>Technical note:</strong> Each video becomes a single 3D training case, enabling the network to learn temporal coherence natively.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Results</h2>
+                    <div class="content">
+                        <p>The 2D+t temporal approach demonstrates superior performance compared to frame-independent 2D methods:</p>
+
+                        <div class="video-container">
+                            <img src="../images/kidis_leg_segmentation.gif" alt="2D+t temporal medical structure segmentation">
+                            <p style="font-style: italic; margin-top: 10px;">Temporally consistent segmentation across a medical video sequence</p>
+                        </div>
+
+                        <ul>
+                            <li><strong>Temporal stability:</strong> Smooth, flicker-free segmentation masks across consecutive frames</li>
+                            <li><strong>Motion coherence:</strong> The network understands structure movement patterns during scanning</li>
+                            <li><strong>Edge refinement:</strong> More accurate boundaries by leveraging information from neighboring timepoints</li>
+                        </ul>
+
+                        <div class="margin-note">
+                            <strong>2D vs 2D+t:</strong> The 2D+t method ensures temporal coherence while maintaining comparable per-frame accuracy.
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectData = getProjectData('medical-structure-segmentation');
+            
+            const headerElement = document.getElementById('project-header');
+            headerElement.innerHTML = `
+                <h1>${projectData.title}</h1>
+                <div class="project-description" style="margin: 20px 0;">
+                    <p>${projectData.description}</p>
+                </div>
+                <div class="project-meta">
+                    <p>${projectData.dateLabel}: ${projectData.date}</p>
+                    <div class="project-tags">
+                        ${projectData.tags.map(tag => `<span class="tag">${tag}</span>`).join('\n                        ')}
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>

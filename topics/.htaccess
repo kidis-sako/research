@@ -1,6 +1,6 @@
-# Security Configuration for Ultrasound Segmentation Project
+# Security Configuration for Medical Structure Segmentation Project
 
-# This file provides server-side security measures for the locked ultrasound segmentation project
+# This file provides server-side security measures for the locked medical structure segmentation project
 # These rules should be implemented in your web server configuration
 
 # Apache .htaccess rules (if using Apache)
@@ -12,11 +12,11 @@
     
     # Block access with debug parameters
     RewriteCond %{QUERY_STRING} debug [NC]
-    RewriteRule ^topics/ultrasound-bone-segmentation\.html$ - [F,L]
+    RewriteRule ^topics/medical-structure-segmentation\.html$ - [F,L]
     
     # Block access with bypass parameters
     RewriteCond %{QUERY_STRING} bypass [NC]
-    RewriteRule ^topics/ultrasound-bone-segmentation\.html$ - [F,L]
+    RewriteRule ^topics/medical-structure-segmentation\.html$ - [F,L]
 </IfModule>
 
 # Nginx configuration (if using Nginx)
@@ -24,7 +24,7 @@
 #     return 403;
 # }
 # 
-# location ~ ^/topics/ultrasound-bone-segmentation\.html$ {
+# location ~ ^/topics/medical-structure-segmentation\.html$ {
 #     if ($arg_debug) {
 #         return 403;
 #     }
@@ -43,7 +43,7 @@
     </FilesMatch>
     
     # Security headers for the main page
-    <FilesMatch "ultrasound-bone-segmentation\.html">
+    <FilesMatch "medical-structure-segmentation\.html">
         Header set X-Content-Type-Options "nosniff"
         Header set X-Frame-Options "DENY"
         Header set X-XSS-Protection "1; mode=block"
