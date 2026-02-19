@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Project - Sentiment Analysis with Word2Vec and Bidirectional LSTM</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="topic-styles.css">
+    <script src="../projects-data.js"></script>
+</head>
+<body>
+    <div class="notebook">
+        <div class="notebook-page">
+            <a href="../index.html" class="back-link">&larr; Back to Projects</a>
+            
+            <div class="project-header" id="project-header">
+                <!-- Header content will be loaded dynamically -->
+            </div>
+
+            <div class="handwritten">
+
+                <section class="section">
+                    <h2>The Task</h2>
+                    <div class="content">
+                        <p>Classify <a href="https://ai.stanford.edu/~amaas/data/sentiment/" target="_blank">IMDB movie reviews</a> as positive or negative using a self-trained <strong>Word2Vec</strong> embedding fed into a <strong>bidirectional LSTM</strong>. Rather than learning embeddings end-to-end inside the model, the goal was to first train Word2Vec on the review corpus, then freeze those embeddings as a non-trainable layer in the LSTM, a form of transfer learning for NLP.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Preprocessing Pipeline</h2>
+                    <div class="content">
+                        <p>Raw movie reviews required substantial cleanup before they could be used for embedding training and classification:</p>
+                        <ul>
+                            <li><strong>Lowercasing</strong> and removal of all non-alphabetic characters</li>
+                            <li><strong>Stop word removal</strong> using NLTK's English stopwords corpus</li>
+                            <li><strong>WordNet lemmatization</strong> to reduce words to their base verb forms (e.g., "murdered" &rarr; "murder", "committed" &rarr; "commit")</li>
+                        </ul>
+
+                        <div class="margin-note">
+                            <strong>Why lemmatize?</strong> Reducing inflected words to a common base form shrinks the vocabulary and lets Word2Vec learn stronger associations from a fixed-size corpus.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Word2Vec Embedding</h2>
+                    <div class="content">
+                        <p>A <strong>gensim Word2Vec</strong> model was trained on the full 50,000-review corpus with the following configuration:</p>
+                        <ul>
+                            <li><strong>Algorithm:</strong> CBOW (Continuous Bag of Words)</li>
+                            <li><strong>Vector size:</strong> 20 dimensions</li>
+                            <li><strong>Window:</strong> 5 tokens</li>
+                            <li><strong>Min count:</strong> 1 (include all words)</li>
+                            <li><strong>Vocabulary:</strong> 86,547 unique tokens</li>
+                        </ul>
+
+                        <p>The trained embeddings captured meaningful semantic relationships:</p>
+
+                        <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 0.9em; margin: 10px 0;">
+                            <strong>Similar to "good":</strong> decent (0.87), great (0.86), alright (0.85), nice (0.82), ok (0.82)<br><br>
+                            <strong>Similar to "horrible":</strong> terrible (0.98), awful (0.97), bad (0.92), pathetic (0.89), dreadful (0.88)
+                        </div>
+
+                        <div class="margin-note">
+                            <strong>Semantic quality:</strong> Even with only 20 dimensions, Word2Vec learned that "horrible" and "terrible" are near-synonyms (0.975 cosine similarity), a strong signal for sentiment classification.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Model Architecture</h2>
+                    <div class="content">
+                        <p>The sentiment classifier consists of:</p>
+                        <ul>
+                            <li><strong>Embedding layer:</strong> 86,548 &times; 20, initialized with Word2Vec weights, <strong>frozen</strong> (no gradient updates)</li>
+                            <li><strong>Bidirectional LSTM:</strong> 64 hidden units per direction (128 total output)</li>
+                            <li><strong>Fully connected layer:</strong> 128 &rarr; 1 with sigmoid activation for binary sentiment</li>
+                        </ul>
+
+                        <p>By freezing the embedding layer, the LSTM only needs to learn how to combine the pre-trained word representations for classification, significantly reducing the number of trainable parameters.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Training and Results</h2>
+                    <div class="content">
+                        <p>The model was trained for 5 epochs on GPU with binary cross-entropy loss:</p>
+
+                        <div style="text-align: center; margin: 20px 0;">
+                            <img src="../images/word2vec-sentiment-training.png" alt="Training and validation loss and accuracy curves over 5 epochs" style="max-width: 700px; width: 100%; border: 1px solid #e0e0e0; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); border-radius: 4px;">
+                            <p style="font-style: italic; margin-top: 10px;">Training curves show an initial validation spike in epoch 2 followed by recovery. By epoch 5, both train and validation accuracy converge near 86%.</p>
+                        </div>
+
+                        <p><strong>Test accuracy: 87.01%</strong></p>
+
+                        <p>The validation loss spike at epoch 2 is notable: the model temporarily overfits before the LSTM finds a more generalizable mapping from the frozen embeddings. This is characteristic of transfer learning setups where the feature extractor is fixed.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Live Predictions</h2>
+                    <div class="content">
+                        <p>Testing the trained model on custom review snippets reveals how the bidirectional LSTM interprets sentiment through its frozen Word2Vec lens. The output is the probability of a positive review (>0.5 = positive, <0.5 = negative):</p>
+
+                        <table style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 0.95em;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid #333;">
+                                    <th style="text-align: left; padding: 8px;">Input Text</th>
+                                    <th style="text-align: right; padding: 8px; white-space: nowrap;">P(positive)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #e0e0e0; background: #e8f5e9;">
+                                    <td style="padding: 8px;">This movie was absolutely fantastic and heartwarming</td>
+                                    <td style="text-align: right; padding: 8px; font-family: monospace;"><strong>0.912</strong></td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e0e0e0; background: #ffebee;">
+                                    <td style="padding: 8px;">An awful plot and terrible acting made it a waste of time</td>
+                                    <td style="text-align: right; padding: 8px; font-family: monospace;"><strong>0.008</strong></td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e0e0e0;">
+                                    <td style="padding: 8px;">Not bad, but could have been better</td>
+                                    <td style="text-align: right; padding: 8px; font-family: monospace;"><strong>0.457</strong></td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e0e0e0; background: #ffebee;">
+                                    <td style="padding: 8px;">This movie was so bad and good at the same time, I can't decide. I really don't think it was a bad movie at all!</td>
+                                    <td style="text-align: right; padding: 8px; font-family: monospace;"><strong>0.128</strong></td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e0e0e0; background: #e8f5e9;">
+                                    <td style="padding: 8px;">It would be a lie to say I hate this movie</td>
+                                    <td style="text-align: right; padding: 8px; font-family: monospace;"><strong>0.630</strong></td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e0e0e0; background: #e8f5e9;">
+                                    <td style="padding: 8px;">I think this movie should get an Oscar</td>
+                                    <td style="text-align: right; padding: 8px; font-family: monospace;"><strong>0.704</strong></td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #e0e0e0; background: #e8f5e9;">
+                                    <td style="padding: 8px;">I hate this movie but it should get an Oscar</td>
+                                    <td style="text-align: right; padding: 8px; font-family: monospace;"><strong>0.695</strong></td>
+                                </tr>
+                                <tr style="background: #e8f5e9;">
+                                    <td style="padding: 8px;">I absolutely hate this movie but I absolutely love it too</td>
+                                    <td style="text-align: right; padding: 8px; font-family: monospace;"><strong>0.635</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p>Clear-cut reviews are classified with high confidence ("fantastic" &rarr; 0.91, "awful" &rarr; 0.01). Ambiguous inputs like "Not bad, but could have been better" land near the decision boundary (0.46). Interestingly, the model struggles with negation and mixed sentiment: "I hate this movie but it should get an Oscar" is classified as positive (0.70), likely because "Oscar" carries strong positive signal in movie review embeddings.</p>
+
+                        <div class="margin-note">
+                            <strong>Negation is hard:</strong> The model reads "hate" + "love" in "I absolutely hate this movie but I absolutely love it too" and leans positive (0.63), suggesting the LSTM weighs later tokens more heavily through its recurrent state.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Takeaways</h2>
+                    <div class="content">
+                        <ul>
+                            <li>Self-trained Word2Vec embeddings on domain-specific text (movie reviews) produce high-quality semantic representations even at 20 dimensions</li>
+                            <li>Freezing embeddings as a non-trainable layer is an effective transfer learning strategy that reduces training time and prevents overfitting on small datasets</li>
+                            <li>A bidirectional LSTM achieves 87% test accuracy on IMDB sentiment, demonstrating that compact Word2Vec embeddings carry sufficient signal for binary classification</li>
+                            <li>Preprocessing matters: stop word removal and lemmatization directly improved embedding quality by reducing vocabulary noise</li>
+                        </ul>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectData = getProjectData('word2vec-sentiment-analysis');
+            
+            const headerElement = document.getElementById('project-header');
+            headerElement.innerHTML = `
+                <h1>${projectData.title}</h1>
+                <div class="project-description" style="margin: 20px 0;">
+                    <p>${projectData.description}</p>
+                </div>
+                <div class="project-meta">
+                    <p>${projectData.dateLabel}: ${projectData.date}</p>
+                    <div class="project-tags">
+                        ${projectData.tags.map(tag => `<span class="tag">${tag}</span>`).join('\n                        ')}
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>

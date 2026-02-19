@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Project - Hyperparameter Optimization with Optuna on CIFAR-10</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="topic-styles.css">
+    <script src="../projects-data.js"></script>
+</head>
+<body>
+    <div class="notebook">
+        <div class="notebook-page">
+            <a href="../index.html" class="back-link">&larr; Back to Projects</a>
+            
+            <div class="project-header" id="project-header">
+                <!-- Header content will be loaded dynamically -->
+            </div>
+
+            <div class="handwritten">
+
+                <section class="section">
+                    <h2>The Task</h2>
+                    <div class="content">
+                        <p>Given a pre-trained <strong>ResNet-50</strong> model and the <a href="https://www.cs.toronto.edu/~kriz/cifar.html" target="_blank">CIFAR-10</a> dataset, the challenge was to maximize classification accuracy under a strict constraint: only <strong>5 training epochs</strong>. The key question: can automated hyperparameter tuning with <a href="https://optuna.org/" target="_blank">Optuna</a> push past the 85% accuracy barrier that manually chosen defaults fail to reach?</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Approach: Optuna with TPE and Pruning</h2>
+                    <div class="content">
+                        <p>Optuna's <strong>Tree-structured Parzen Estimator (TPE)</strong> sampler was used to intelligently explore the hyperparameter space. Unlike grid or random search, TPE models the relationship between hyperparameters and performance, progressively focusing on promising regions.</p>
+
+                        <p>To avoid wasting GPU time on poor configurations, a <strong>MedianPruner</strong> was enabled. After each epoch, Optuna compares a trial's intermediate accuracy against the median of completed trials; if it falls below, the trial is terminated early.</p>
+
+                        <div class="margin-note">
+                            <strong>Why pruning matters:</strong> With 30 trials at 5 epochs each, pruning saved significant compute by killing underperforming trials before they finished all 5 epochs.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Search Space</h2>
+                    <div class="content">
+                        <p>Five hyperparameters were optimized simultaneously:</p>
+                        <ul>
+                            <li><strong>Batch size:</strong> 137 to 280 (integer)</li>
+                            <li><strong>Dropout rate:</strong> 0.0 to 0.25 (float)</li>
+                            <li><strong>Optimizer:</strong> RMSprop or Adam (categorical)</li>
+                            <li><strong>Learning rate:</strong> 1e-4 to 9e-4 (log-uniform)</li>
+                            <li><strong>LR scheduler:</strong> CosineAnnealingLR enabled/disabled (categorical)</li>
+                        </ul>
+
+                        <p>The model itself was a <strong>ResNet-50</strong> with pre-trained ImageNet weights, where only the final fully connected layer was replaced with a dropout + linear layer for 10-class CIFAR-10 output.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Results</h2>
+                    <div class="content">
+                        <p>Across 30 trials, Optuna found a configuration achieving <strong>88.55% accuracy</strong>, well above the 85% target, in just 5 epochs:</p>
+
+                        <div style="text-align: center; margin: 20px 0;">
+                            <img src="../images/optuna-param-importances.png" alt="Optuna optimization history showing trial-by-trial accuracy improvement" style="max-width: 600px; width: 100%; border: 1px solid #e0e0e0; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); border-radius: 4px;">
+                            <p style="font-style: italic; margin-top: 10px;">Optimization history: TPE quickly finds a strong configuration (88.3%) in trial 1, then incrementally improves to 88.55% by trial 29. Only non-pruned trials are shown.</p>
+                        </div>
+
+                        <h3>Best Configuration</h3>
+                        <ul>
+                            <li><strong>Batch size:</strong> 150</li>
+                            <li><strong>Dropout rate:</strong> 0.205</li>
+                            <li><strong>Optimizer:</strong> RMSprop</li>
+                            <li><strong>Learning rate:</strong> 3.24e-4</li>
+                            <li><strong>Scheduler:</strong> CosineAnnealingLR enabled</li>
+                        </ul>
+
+                        <div class="margin-note">
+                            <strong>Learning rate was king:</strong> Optuna's parameter importance analysis identified learning rate as the most influential hyperparameter by far, followed by batch size and dropout rate.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Key Findings</h2>
+                    <div class="content">
+                        <ul>
+                            <li><strong>RMSprop consistently outperformed Adam</strong> on this transfer learning task: the best trials all used RMSprop, while some Adam trials were pruned early</li>
+                            <li><strong>CosineAnnealingLR always helped</strong>: every strong trial had the scheduler enabled, confirming that learning rate decay is critical when training for very few epochs</li>
+                            <li><strong>Moderate dropout (0.15--0.25)</strong> worked best. Too little led to slight overfitting, while higher values (explored in earlier iterations) degraded accuracy</li>
+                            <li><strong>Batch size around 150</strong> struck the right balance between gradient noise (useful for generalization) and stable convergence</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Takeaways</h2>
+                    <div class="content">
+                        <ul>
+                            <li>Automated HPO with Optuna can find configurations that outperform hand-tuned defaults: 88.55% vs. a baseline that failed to reach 85%</li>
+                            <li>TPE is effective even with a modest budget (30 trials). It found a near-optimal region within the first few trials and refined from there</li>
+                            <li>Pruning unpromising trials via MedianPruner is essential for making HPO practical on GPU-constrained budgets</li>
+                            <li>Transfer learning + HPO is a powerful combination: pre-trained weights handle feature extraction while Optuna fine-tunes the training recipe</li>
+                        </ul>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectData = getProjectData('hpo-optuna-cifar10');
+            
+            const headerElement = document.getElementById('project-header');
+            headerElement.innerHTML = `
+                <h1>${projectData.title}</h1>
+                <div class="project-description" style="margin: 20px 0;">
+                    <p>${projectData.description}</p>
+                </div>
+                <div class="project-meta">
+                    <p>${projectData.dateLabel}: ${projectData.date}</p>
+                    <div class="project-tags">
+                        ${projectData.tags.map(tag => `<span class="tag">${tag}</span>`).join('\n                        ')}
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>

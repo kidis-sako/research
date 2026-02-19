@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Project - Quick Draw Doodle Classification with CNNs</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="topic-styles.css">
+    <script src="../projects-data.js"></script>
+</head>
+<body>
+    <div class="notebook">
+        <div class="notebook-page">
+            <a href="../index.html" class="back-link">&larr; Back to Projects</a>
+            
+            <div class="project-header" id="project-header">
+                <!-- Header content will be loaded dynamically -->
+            </div>
+
+            <div class="handwritten">
+
+                <section class="section">
+                    <h2>The Task</h2>
+                    <div class="content">
+                        <p>Google's <a href="https://quickdraw.withgoogle.com/data" target="_blank">Quick, Draw!</a> dataset contains over 50 million hand-drawn doodles across 300+ categories. The challenge: build a CNN that can classify a subset of 10 deliberately confusing categories: round objects that look remarkably similar even to the human eye.</p>
+
+                        <p>The 10 categories: <strong>Apple, Baseball, Basketball, Blueberry, Circle, Clock, Cookie, Donut, Face, Pizza</strong>.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Data</h2>
+                    <div class="content">
+                        <p>The dataset consists of 28x28 grayscale doodle images split into training, validation, and test sets (50,000 test samples). All classes are well-balanced, so no resampling or weighting was needed.</p>
+
+                        <div class="margin-note">
+                            <strong>Why these categories?</strong> Round objects like baseballs, blueberries, circles, and donuts create genuine ambiguity, testing how well the CNN can pick up on subtle structural differences in hand-drawn sketches.
+                        </div>
+
+                        <p>Data augmentation (rotation, flipping, scaling) was considered to combat overfitting and improve generalization, though the large dataset size already provided sufficient diversity for training.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Model Architecture</h2>
+                    <div class="content">
+                        <p>A custom CNN built in PyTorch with three convolutional layers, max-pooling, dropout regularization, and fully connected layers:</p>
+
+                        <div style="text-align: center; margin: 20px 0;">
+                            <img src="../images/cnn-quickdraw-architecture.png" alt="CNN architecture visualization showing convolution, pooling, and dense layers" style="max-width: 700px; width: 100%; border: 1px solid #e0e0e0; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); border-radius: 4px;">
+                            <p style="font-style: italic; margin-top: 10px;">CNN architecture: 1@28x28 input through three convolutional blocks to 10-class output</p>
+                        </div>
+
+                        <ul>
+                            <li><strong>Conv1:</strong> 1 &rarr; 16 filters (3x3, padding=1)</li>
+                            <li><strong>Conv2:</strong> 16 &rarr; 32 filters (3x3, padding=1), then MaxPool2d</li>
+                            <li><strong>Conv3:</strong> 32 &rarr; 32 filters (3x3, padding=1), then MaxPool2d</li>
+                            <li><strong>FC1:</strong> 1568 &rarr; 256 with Dropout(0.5)</li>
+                            <li><strong>FC2:</strong> 256 &rarr; 10 (softmax output)</li>
+                        </ul>
+
+                        <p>All hidden layers use ReLU activation. Total trainable parameters: ~418,000.</p>
+
+                        <div class="margin-note">
+                            <strong>Architecture tweak:</strong> Grouping conv1+conv2 before the first pooling layer (instead of pooling after every conv) improved accuracy from 88.8% to 90.6%.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Training</h2>
+                    <div class="content">
+                        <p>The model was trained on GPU with the following configuration:</p>
+                        <ul>
+                            <li><strong>Optimizer:</strong> Adam (lr=0.001)</li>
+                            <li><strong>Loss:</strong> Cross-entropy</li>
+                            <li><strong>Batch size:</strong> 64</li>
+                            <li><strong>Epochs:</strong> Tuned to break the 90% accuracy barrier</li>
+                        </ul>
+
+                        <p>Training and validation loss/accuracy curves were monitored to detect overfitting. The dropout layer (p=0.5) before the final classifier was the primary regularization mechanism.</p>
+
+                        <div style="text-align: center; margin: 20px 0;">
+                            <img src="../images/quickdraw-training-curves.png" alt="Training and validation loss and accuracy curves over 15 epochs" style="max-width: 700px; width: 100%; border: 1px solid #e0e0e0; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); border-radius: 4px;">
+                            <p style="font-style: italic; margin-top: 10px;">Loss and accuracy curves over 15 epochs. Validation loss begins to plateau around epoch 8, while training loss continues to decrease, a mild sign of overfitting kept in check by dropout.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Results</h2>
+                    <div class="content">
+                        <p>The model achieved strong performance on visually ambiguous doodle categories:</p>
+                        <ul>
+                            <li><strong>Training accuracy:</strong> 90.62%</li>
+                            <li><strong>Validation accuracy:</strong> 90.08%</li>
+                            <li><strong>Test accuracy:</strong> ~90%</li>
+                        </ul>
+
+                        <p>The small gap between training and validation accuracy suggests the model generalizes well without severe overfitting.</p>
+
+                        <div class="margin-note">
+                            <strong>Hardest categories:</strong> Baseball, Blueberry, Circle, and Face were the most commonly confused, all sharing a dominant circular shape in doodle form.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Analysis</h2>
+                    <div class="content">
+                        <p>Prediction analysis on individual samples revealed interesting confidence patterns:</p>
+
+                        <div style="text-align: center; margin: 20px 0;">
+                            <img src="../images/quickdraw-predictions.png" alt="Prediction probability distributions for two baseball doodles" style="max-width: 600px; width: 100%; border: 1px solid #e0e0e0; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); border-radius: 4px;">
+                            <p style="font-style: italic; margin-top: 10px;">Two baseball doodles with very different confidence levels. The top sample is predicted at 62% confidence; the bottom one drops to 28% with Blueberry nearly tied, illustrating how ambiguous simple sketches can be.</p>
+                        </div>
+
+                        <ul>
+                            <li>For clear doodles, the model predicted correctly with ~62% confidence, with the runner-up class (usually another round object) at ~19%</li>
+                            <li>For ambiguous doodles, confidence dropped to ~28% with near-ties between similar categories</li>
+                        </ul>
+
+                        <p>The confusion between round objects (Baseball vs. Blueberry vs. Circle vs. Face) highlights a fundamental limitation: when hand-drawn sketches reduce objects to their simplest geometric form, even sophisticated CNNs struggle to distinguish them without additional context like size or internal details.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Takeaways</h2>
+                    <div class="content">
+                        <ul>
+                            <li>90% accuracy on deliberately confusing categories validates that even a modest CNN can learn meaningful features from simple doodles</li>
+                            <li>Architectural decisions matter: grouping convolutions before pooling preserved spatial detail and yielded a ~2% accuracy gain</li>
+                            <li>Dropout at 0.5 was effective at keeping the train/val gap small despite the model's 418K parameters</li>
+                            <li>The per-class confusion patterns provide intuitive insight into what the network actually learns to distinguish</li>
+                        </ul>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectData = getProjectData('cnn-quickdraw-classification');
+            
+            const headerElement = document.getElementById('project-header');
+            headerElement.innerHTML = `
+                <h1>${projectData.title}</h1>
+                <div class="project-description" style="margin: 20px 0;">
+                    <p>${projectData.description}</p>
+                </div>
+                <div class="project-meta">
+                    <p>${projectData.dateLabel}: ${projectData.date}</p>
+                    <div class="project-tags">
+                        ${projectData.tags.map(tag => `<span class="tag">${tag}</span>`).join('\n                        ')}
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
