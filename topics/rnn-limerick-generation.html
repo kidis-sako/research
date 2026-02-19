@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Project - Character-Level Limerick Generation with LSTM</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="topic-styles.css">
+    <script src="../projects-data.js"></script>
+</head>
+<body>
+    <div class="notebook">
+        <div class="notebook-page">
+            <a href="../index.html" class="back-link">&larr; Back to Projects</a>
+            
+            <div class="project-header" id="project-header">
+                <!-- Header content will be loaded dynamically -->
+            </div>
+
+            <div class="handwritten">
+
+                <section class="section">
+                    <h2>The Task</h2>
+                    <div class="content">
+                        <p>The goal is to train a recurrent neural network that can generate text resembling <a href="https://en.wikipedia.org/wiki/Limerick_(poetry)" target="_blank">limericks</a> -- five-line poems with an AABBA rhyme scheme. The model learns character-by-character from a large corpus of limericks scraped from the web, then attempts to produce new ones from a seed prompt.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Data and Preprocessing</h2>
+                    <div class="content">
+                        <p>The training data consists of approximately <strong>15 million characters</strong> of continuous limerick text with a vocabulary of <strong>70 unique characters</strong> (lowercase letters, digits, punctuation, whitespace).</p>
+
+                        <p>Each character is mapped to a unique integer index. The text is then sliced into overlapping sequences of fixed length (100 characters), where the target for each sequence is the next character. This produces around 149,000 training samples fed to the model in batches of 128.</p>
+
+                        <div class="margin-note">
+                            <strong>Why character-level?</strong> Unlike word-level models, character-level models can learn spelling, punctuation patterns, and line structure from scratch -- important for reproducing the rhyme and rhythm of limericks.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Model Architecture</h2>
+                    <div class="content">
+                        <p>The network follows an Embedding &rarr; LSTM &rarr; Linear pipeline:</p>
+                        <ul>
+                            <li><strong>Embedding layer:</strong> Maps each of the 70 characters to a 64-dimensional dense vector</li>
+                            <li><strong>LSTM layer:</strong> 512 hidden units processing the embedded sequence with learned forget, input, and output gates</li>
+                            <li><strong>Linear layer:</strong> Projects the final hidden state back to 70 logits (one per character)</li>
+                        </ul>
+
+                        <div style="text-align: center; margin: 20px 0;">
+                            <img src="../images/lstm-architecture.png" alt="LSTM cell architecture with forget, input, and output gates" style="max-width: 500px; width: 100%; border: 1px solid #e0e0e0; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); border-radius: 4px;">
+                            <p style="font-style: italic; margin-top: 10px;">LSTM cell: the forget gate (f), input gate (i), and output gate (o) control information flow through the cell state</p>
+                        </div>
+
+                        <div class="margin-note">
+                            <strong>Why LSTM over vanilla RNN?</strong> Standard RNNs suffer from vanishing gradients on long sequences. The LSTM's gating mechanism allows it to retain information across the ~100-character window needed to capture limerick structure.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Training</h2>
+                    <div class="content">
+                        <p>The model was trained on GPU using PyTorch with the Adam optimizer and cross-entropy loss. Training was split into two phases to compare how additional training affects generation quality:</p>
+                        <ul>
+                            <li><strong>Phase 1:</strong> 2 epochs -- the model learns basic character distributions</li>
+                            <li><strong>Phase 2:</strong> 18 more epochs (20 total) -- the model refines its understanding of word boundaries, line breaks, and rhyme patterns</li>
+                        </ul>
+                        <p>Model checkpoints were saved after each phase, enabling side-by-side comparison of generation quality at different training stages.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Text Generation</h2>
+                    <div class="content">
+                        <p>Generation uses autoregressive sampling: starting from a seed prompt, the model predicts the next character, appends it, and repeats. A <strong>temperature</strong> parameter controls randomness -- lower values produce more conservative (repetitive) text, while higher values increase diversity at the cost of coherence.</p>
+
+                        <h3>2-Epoch Model Output</h3>
+                        <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; font-family: monospace; white-space: pre-wrap; margin: 10px 0;">a man named !
+its a cansop can from brow
+down that someone was dax:
+kill them ancipid: you're this righta
+to a bed lipting asked to a pass.</div>
+
+                        <h3>20-Epoch Model Output</h3>
+                        <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; font-family: monospace; white-space: pre-wrap; margin: 10px 0;">a man named brisses.
+but luck siff about farming)
+our troor of your study,
+redule but fun where it sweeling to me;
+i bad i do cook earth, be,</div>
+
+                        <div class="margin-note">
+                            <strong>Key observation:</strong> The 20-epoch model produces more word-like tokens and attempts line structure, but still struggles with coherent grammar and reliable rhyming.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Analysis</h2>
+                    <div class="content">
+                        <p><strong>2-epoch model:</strong> Generates mostly gibberish with occasional recognizable fragments. No limerick structure, no rhyme scheme, minimal word coherence.</p>
+
+                        <p><strong>20-epoch model:</strong> Shows clear improvement -- outputs resemble English words, line breaks appear in roughly the right places, and there are sporadic attempts at end-of-line rhyming. However, grammar remains poor and content is nonsensical.</p>
+
+                        <p>This progression demonstrates how character-level RNNs gradually learn hierarchical structure: first individual characters, then character combinations (spelling), then word boundaries, and finally higher-level patterns like line structure and rhyme.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Takeaways</h2>
+                    <div class="content">
+                        <ul>
+                            <li>Character-level LSTM can learn basic text structure from raw characters alone, but generating coherent poetry requires significantly more capacity or training</li>
+                            <li>Model saving and loading is essential for iterative training -- splitting training into phases enables checkpoint comparison without retraining from scratch</li>
+                            <li>Temperature-controlled sampling provides a useful trade-off between diversity and coherence during generation</li>
+                            <li>GPU acceleration was critical for the 15M-character dataset -- training on CPU would have been impractical</li>
+                        </ul>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectData = getProjectData('rnn-limerick-generation');
+            
+            const headerElement = document.getElementById('project-header');
+            headerElement.innerHTML = `
+                <h1>${projectData.title}</h1>
+                <div class="project-description" style="margin: 20px 0;">
+                    <p>${projectData.description}</p>
+                </div>
+                <div class="project-meta">
+                    <p>${projectData.dateLabel}: ${projectData.date}</p>
+                    <div class="project-tags">
+                        ${projectData.tags.map(tag => `<span class="tag">${tag}</span>`).join('\n                        ')}
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>

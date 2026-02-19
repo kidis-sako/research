@@ -44,38 +44,38 @@ const PROJECTS_DATA = {
         imageAlt: 'Ultrasound object detection with RANSAC line detection',
         url: 'topics/ultrasound-object-detection.html'
     },
-    'wall-segmentation': {
-        id: 'wall-segmentation',
-        title: 'Wall Segmentation in Floorplans using Mask R-CNN',
-        description: 'Training Mask R-CNN to detect and segment walls in floorplan images. This enables automated architectural analysis for construction applications.',
-        tags: ['Computer Vision', 'Deep Learning', 'Mask R-CNN', 'Segmentation'],
-        date: 'July 2024',
+    // 'wall-segmentation': {
+    //     id: 'wall-segmentation',
+    //     title: 'Wall Segmentation in Floorplans using Mask R-CNN',
+    //     description: 'Training Mask R-CNN to detect and segment walls in floorplan images. This enables automated architectural analysis for construction applications.',
+    //     tags: ['Computer Vision', 'Deep Learning', 'Mask R-CNN', 'Segmentation'],
+    //     date: 'July 2024',
+    //     dateLabel: 'Completed',
+    //     image: 'images/bounding-boxes.png',
+    //     imageAlt: 'Wall segmentation bounding boxes',
+    //     url: 'topics/wall-segmentation.html'
+    // },
+    // 'wall-segmentation-geometric': {
+    //     id: 'wall-segmentation-geometric',
+    //     title: 'Wall Segmentation in Floorplans using Geometric Approach',
+    //     description: 'Using traditional computer vision techniques to segment walls in floorplans. This provides a lightweight, interpretable alternative to deep learning that works without training data.',
+    //     tags: ['Computer Vision', 'OpenCV','Geometric Processing', 'Segmentation'],
+    //     date: 'July 2024',
+    //     dateLabel: 'Completed',
+    //     image: 'images/colored-room-separation.jpg',
+    //     imageAlt: 'Room segmentation',
+    //     url: 'topics/wall-segmentation-geometric.html'
+    // },
+    'rnn-limerick-generation': {
+        id: 'rnn-limerick-generation',
+        title: 'Character-Level Limerick Generation with LSTM',
+        description: 'Trained a character-level LSTM network on ~15 million characters of limerick text to generate poetry. Compared models at 2 and 20 epochs to study how recurrent networks progressively learn spelling, word boundaries, and poetic structure from raw characters.',
+        tags: ['Deep Learning', 'RNN', 'LSTM', 'NLP', 'PyTorch'],
+        date: 'February 2026',
         dateLabel: 'Completed',
-        image: 'images/bounding-boxes.png',
-        imageAlt: 'Wall segmentation bounding boxes',
-        url: 'topics/wall-segmentation.html'
-    },
-    'wall-segmentation-geometric': {
-        id: 'wall-segmentation-geometric',
-        title: 'Wall Segmentation in Floorplans using Geometric Approach',
-        description: 'Using traditional computer vision techniques to segment walls in floorplans. This provides a lightweight, interpretable alternative to deep learning that works without training data.',
-        tags: ['Computer Vision', 'OpenCV','Geometric Processing', 'Segmentation'],
-        date: 'July 2024',
-        dateLabel: 'Completed',
-        image: 'images/colored-room-separation.jpg',
-        imageAlt: 'Room segmentation',
-        url: 'topics/wall-segmentation-geometric.html'
-    },
-    'motion-detection': {
-        id: 'motion-detection',
-        title: 'Motion Detection using Background Subtraction Techniques',
-        description: 'Testing different background subtraction algorithms for motion detection. This research helps optimize surveillance systems and traffic monitoring for real-time applications.',
-        tags: ['Computer Vision', 'Motion Detection', 'OpenCV'],
-        date: 'December 2023',
-        dateLabel: 'Completed',
-        image: 'images/cars-comparison-video-1-min.gif',
-        imageAlt: 'Motion detection comparison',
-        url: 'topics/motion-detection.html'
+        image: 'images/lstm-architecture.png',
+        imageAlt: 'LSTM cell architecture with gates',
+        url: 'topics/rnn-limerick-generation.html'
     },
     'log-analysis-tool': {
         id: 'log-analysis-tool',
@@ -98,6 +98,17 @@ const PROJECTS_DATA = {
         image: 'images/route-planning-time.jpg',
         imageAlt: 'Time-optimized route planning',
         url: 'topics/time-dependent-route-planning.html'
+    },
+    'motion-detection': {
+        id: 'motion-detection',
+        title: 'Motion Detection using Background Subtraction Techniques',
+        description: 'Testing different background subtraction algorithms for motion detection. This research helps optimize surveillance systems and traffic monitoring for real-time applications.',
+        tags: ['Computer Vision', 'Motion Detection', 'OpenCV'],
+        date: 'December 2023',
+        dateLabel: 'Completed',
+        image: 'images/cars-comparison-video-1-min.gif',
+        imageAlt: 'Motion detection comparison',
+        url: 'topics/motion-detection.html'
     }
 };
 
