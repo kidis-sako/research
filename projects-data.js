@@ -22,6 +22,17 @@ const PROJECTS_DATA = {
         imageAlt: 'Surfing maneuver recognition paper',
         url: 'topics/surfing_maneuver_recognition_s3d_transfer_learning.pdf'
     },
+    'hpo-optuna-cifar10': {
+        id: 'hpo-optuna-cifar10',
+        title: 'Hyperparameter Optimization with Optuna on CIFAR-10',
+        description: 'Used Optuna\'s TPE sampler and MedianPruner to automatically optimize hyperparameters for a ResNet-50 transfer learning model on CIFAR-10. Achieved 88.55% accuracy in just 5 epochs across 30 trials',
+        tags: ['Deep Learning', 'Optuna', 'Transfer Learning', 'HPO', 'PyTorch'],
+        date: 'March 2025',
+        dateLabel: 'Completed',
+        image: 'images/optuna-param-importances.png',
+        imageAlt: 'Optuna optimization history for CIFAR-10 HPO',
+        url: 'topics/hpo-optuna-cifar10.html'
+    },
     'log-analysis-tool': {
         id: 'log-analysis-tool',
         title: 'Multi-Agent Log and Database Diagnostics Tool',
@@ -43,17 +54,6 @@ const PROJECTS_DATA = {
         image: 'images/cnn-quickdraw-architecture.png',
         imageAlt: 'CNN architecture for Quick Draw doodle classification',
         url: 'topics/cnn-quickdraw-classification.html'
-    },
-    'hpo-optuna-cifar10': {
-        id: 'hpo-optuna-cifar10',
-        title: 'Hyperparameter Optimization with Optuna on CIFAR-10',
-        description: 'Used Optuna\'s TPE sampler and MedianPruner to automatically optimize hyperparameters for a ResNet-50 transfer learning model on CIFAR-10. Achieved 88.55% accuracy in just 5 epochs across 30 trials',
-        tags: ['Deep Learning', 'Optuna', 'Transfer Learning', 'HPO', 'PyTorch'],
-        date: 'March 2025',
-        dateLabel: 'Completed',
-        image: 'images/optuna-param-importances.png',
-        imageAlt: 'Optuna optimization history for CIFAR-10 HPO',
-        url: 'topics/hpo-optuna-cifar10.html'
     },
     'word2vec-sentiment-analysis': {
         id: 'word2vec-sentiment-analysis',
