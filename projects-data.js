@@ -22,6 +22,17 @@ const PROJECTS_DATA = {
         imageAlt: 'Surfing maneuver recognition paper',
         url: 'topics/surfing_maneuver_recognition_s3d_transfer_learning.pdf'
     },
+    'gaussian-splatting-brush': {
+        id: 'gaussian-splatting-brush',
+        title: '3D Gaussian Splatting Reconstruction with Brush',
+        description: 'Trained a real-scene 3D Gaussian Splatting radiance field on a laptop GPU using Brush. Reconstructs photorealistic novel views of the Tanks & Temples truck scene in ~21 min with 1.6M Gaussians.',
+        tags: ['3D Gaussian Splatting', 'Radiance Fields', 'WebGPU', 'Brush', 'Novel View Synthesis'],
+        date: 'July 2026',
+        dateLabel: 'Completed',
+        image: 'images/gaussian-truck-front.png',
+        imageAlt: '3D Gaussian Splatting render of the truck scene',
+        url: 'topics/gaussian-splatting-brush.html'
+    },
     'hpo-optuna-cifar10': {
         id: 'hpo-optuna-cifar10',
         title: 'Hyperparameter Optimization with Optuna on CIFAR-10',

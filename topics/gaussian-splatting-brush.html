@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Project - 3D Gaussian Splatting Reconstruction with Brush</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="topic-styles.css">
+    <script src="../projects-data.js"></script>
+    <style>
+        .gs-hero {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .gs-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 1px solid var(--line-color);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
+            border-radius: 4px;
+        }
+        .gs-hero .span-2 { grid-column: span 2; }
+        .gs-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+        .gs-stat {
+            background: var(--highlight-color, #fff8e1);
+            border: 1px solid var(--line-color);
+            border-radius: 4px;
+            padding: 14px;
+            text-align: center;
+        }
+        .gs-stat .num {
+            display: block;
+            font-size: 1.6em;
+            font-weight: bold;
+            font-family: 'Times New Roman', serif;
+        }
+        .gs-stat .lbl {
+            font-size: 0.8em;
+            color: var(--accent-color);
+        }
+        .gs-card {
+            display: grid;
+            grid-template-columns: 56px 1fr;
+            gap: 18px;
+            align-items: start;
+            border: 1px solid var(--line-color);
+            border-radius: 6px;
+            padding: 20px;
+            margin: 22px 0;
+            background: #fff;
+            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        .gs-card.primary {
+            background: #e0f2f1;
+            border-left: 6px solid #00796b;
+        }
+        .gs-card .badge {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #00796b;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: bold;
+            font-family: 'Times New Roman', serif;
+        }
+        .gs-card h3 { margin: 0 0 6px 0; }
+        .gs-card .sub {
+            font-style: italic;
+            color: var(--accent-color);
+            margin: 0 0 12px 0;
+        }
+        .gs-card code {
+            background: #d7ece9;
+            padding: 1px 5px;
+            border-radius: 3px;
+        }
+        .gs-diagram {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 12px;
+            align-items: center;
+            margin: 16px 0 4px 0;
+        }
+        .gs-panel {
+            border: 1px solid var(--line-color);
+            border-radius: 5px;
+            background: #fafafa;
+            padding: 10px;
+            text-align: center;
+        }
+        .gs-panel svg { width: 100%; height: auto; display: block; }
+        .gs-panel .cap {
+            font-size: 0.82em;
+            margin-top: 8px;
+            line-height: 1.35;
+        }
+        .gs-panel .cap strong { display: block; }
+        .gs-arrow {
+            font-size: 1.8em;
+            color: #00796b;
+            text-align: center;
+        }
+        @media (max-width: 600px) {
+            .gs-hero .span-2 { grid-column: span 1; }
+            .gs-card { grid-template-columns: 1fr; }
+            .gs-diagram { grid-template-columns: 1fr; }
+            .gs-arrow { transform: rotate(90deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="notebook">
+        <div class="notebook-page">
+            <a href="../index.html" class="back-link">← Back to Projects</a>
+
+            <div class="project-header" id="project-header">
+                <!-- Header content will be loaded dynamically -->
+            </div>
+
+            <div class="handwritten">
+                <section class="section">
+                    <h2>How &amp; Why</h2>
+                    <div class="content">
+                        <p>3D Gaussian Splatting (3DGS) represents a scene as millions of tiny colored 3D Gaussians. Given a set of posed photos, the Gaussians are optimized until they reproduce the images, giving a radiance field that renders novel viewpoints in real time.</p>
+                        <p>The usual toolchain (CUDA toolkit, Python, custom compilation) is a barrier. This project uses <a href="https://github.com/ArthurBrussee/brush" target="_blank">Brush</a>, a WebGPU-based engine: no CUDA, no Python, no compile step. The full pipeline (posed images to Gaussian training to an exported <code>.ply</code> to real-time viewing) runs on a laptop GPU (RTX 3500 Ada) using only ~3.6 GB of VRAM.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Reconstructed Novel Views</h2>
+                    <div class="content">
+                        <p>Held-out evaluation views rendered from the trained splat at step 30,000. None of these camera angles were used as direct supervision, they are synthesized from the Gaussian field.</p>
+                        <div class="gs-hero">
+                            <img class="span-2" src="../images/gaussian-truck-front.png" alt="3DGS render, front view of the truck">
+                            <img src="../images/gaussian-truck-rear.png" alt="3DGS render, rear three-quarter view">
+                            <img src="../images/gaussian-truck-side.png" alt="3DGS render, full side profile">
+                            <img src="../images/gaussian-truck-rear-left.png" alt="3DGS render, rear left view">
+                            <img src="../images/gaussian-truck-three-quarter.png" alt="3DGS render, three-quarter view">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Ground Truth vs Reconstruction</h2>
+                    <div class="content">
+                        <p>The held-out photo the network never trained on, next to the 3DGS render of the same viewpoint.</p>
+                        <div class="results-gallery">
+                            <div class="result-item">
+                                <img src="../images/gaussian-truck-gt-front.jpg" alt="Ground truth input photo, front view">
+                                <p>Ground truth (held-out photo)</p>
+                            </div>
+                            <div class="result-item">
+                                <img src="../images/gaussian-truck-front.png" alt="3DGS reconstruction, front view">
+                                <p>3DGS reconstruction (rendered)</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>At a Glance</h2>
+                    <div class="content">
+                        <div class="gs-stats">
+                            <div class="gs-stat"><span class="num">251</span><span class="lbl">posed input images</span></div>
+                            <div class="gs-stat"><span class="num">30k</span><span class="lbl">training steps</span></div>
+                            <div class="gs-stat"><span class="num">~21 min</span><span class="lbl">on RTX 3500 Ada</span></div>
+                            <div class="gs-stat"><span class="num">1.63M</span><span class="lbl">Gaussians (3M cap)</span></div>
+                            <div class="gs-stat"><span class="num">~3.6 GB</span><span class="lbl">peak VRAM / 12 GB</span></div>
+                            <div class="gs-stat"><span class="num">366 MB</span><span class="lbl">exported .ply model</span></div>
+                        </div>
+                        <p>Scene: Tanks &amp; Temples "truck" (COLMAP format), spherical-harmonic degree 3.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Takeaway: What Transfers When Implementing 3DGS</h2>
+                    <div class="content">
+                        <p>3DGS gets faster mainly by doing <em>less work on fewer primitives</em>, not by micro-optimizing kernels. Two ideas carry over to any stack (gsplat, Nerfstudio, atlas-gsplat), and the first one dominates everything else.</p>
+
+                        <div class="gs-card primary">
+                            <div class="badge">1</div>
+                            <div>
+                                <h3>Fix the splat budget and place with MCMC</h3>
+                                <p class="sub">The single highest-impact lever.</p>
+                                <p>Vanilla 3DGS grows the model by <strong>adaptive densification</strong>: wherever image error is high it clones and splits Gaussians, with no ceiling. The count balloons to millions, and a large share are "dead" splats sitting in already-solved regions or empty space. Every extra Gaussian is paid for at <em>every</em> step, in sorting, rasterization, and the backward pass.</p>
+                                <p>The fix is to set a <strong>hard cap</strong> and drive placement with <strong>MCMC</strong> (Markov-Chain Monte Carlo). Instead of cloning forever, MCMC treats splats as movable samples: it removes low-opacity, low-contribution splats and respawns them where error is highest. The budget is always spent where it matters, so you reach quality comparable to gsplat/inria with roughly <strong>half the primitives</strong>, lower VRAM, and a faster pipeline end to end.</p>
+
+                                <div class="gs-diagram">
+                                    <div class="gs-panel">
+                                        <svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Unbounded densification with many wasted splats">
+                                            <rect x="1" y="1" width="118" height="88" rx="4" fill="none" stroke="#bbb"/>
+                                            <path d="M35 60 Q60 25 85 60" fill="none" stroke="#00796b" stroke-width="2"/>
+                                            <circle cx="40" cy="55" r="3.5" fill="#00796b"/>
+                                            <circle cx="52" cy="42" r="3.5" fill="#00796b"/>
+                                            <circle cx="60" cy="37" r="3.5" fill="#00796b"/>
+                                            <circle cx="68" cy="42" r="3.5" fill="#00796b"/>
+                                            <circle cx="80" cy="55" r="3.5" fill="#00796b"/>
+                                            <circle cx="46" cy="48" r="3.5" fill="#00796b"/>
+                                            <circle cx="74" cy="48" r="3.5" fill="#00796b"/>
+                                            <circle cx="15" cy="18" r="3.5" fill="#c0392b" opacity="0.55"/>
+                                            <circle cx="105" cy="20" r="3.5" fill="#c0392b" opacity="0.55"/>
+                                            <circle cx="20" cy="75" r="3.5" fill="#c0392b" opacity="0.55"/>
+                                            <circle cx="100" cy="78" r="3.5" fill="#c0392b" opacity="0.55"/>
+                                            <circle cx="12" cy="45" r="3.5" fill="#c0392b" opacity="0.55"/>
+                                            <circle cx="108" cy="50" r="3.5" fill="#c0392b" opacity="0.55"/>
+                                            <circle cx="60" cy="12" r="3.5" fill="#c0392b" opacity="0.55"/>
+                                        </svg>
+                                        <div class="cap"><strong>Unbounded densification</strong>~2-4M splats, many wasted (red)</div>
+                                    </div>
+                                    <div class="gs-arrow">&rarr;</div>
+                                    <div class="gs-panel">
+                                        <svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Fixed budget with MCMC relocating splats onto the surface">
+                                            <rect x="1" y="1" width="118" height="88" rx="4" fill="none" stroke="#bbb"/>
+                                            <path d="M35 60 Q60 25 85 60" fill="none" stroke="#00796b" stroke-width="2"/>
+                                            <circle cx="38" cy="57" r="3.5" fill="#00796b"/>
+                                            <circle cx="45" cy="49" r="3.5" fill="#00796b"/>
+                                            <circle cx="52" cy="42" r="3.5" fill="#00796b"/>
+                                            <circle cx="60" cy="37" r="3.5" fill="#00796b"/>
+                                            <circle cx="68" cy="42" r="3.5" fill="#00796b"/>
+                                            <circle cx="75" cy="49" r="3.5" fill="#00796b"/>
+                                            <circle cx="82" cy="57" r="3.5" fill="#00796b"/>
+                                        </svg>
+                                        <div class="cap"><strong>Fixed budget + MCMC</strong>~half the splats, all on the surface</div>
+                                    </div>
+                                </div>
+
+                                <p style="margin-bottom:0;"><strong>How to use it:</strong> in Brush it is the default via <code>--max-splats</code>; in gsplat it is <code>MCMCStrategy</code> with <code>cap_max</code>. This single choice dominates the speed / quality / memory trade-off.</p>
+                            </div>
+                        </div>
+
+                        <div class="gs-card">
+                            <div class="badge">2</div>
+                            <div>
+                                <h3>Cull tighter and fuse the backward pass</h3>
+                                <p class="sub">Cut wasted work once the budget is fixed.</p>
+                                <p>Two smaller wins, both about <strong>memory traffic</strong> (the real bottleneck). First, each Gaussian is normally assigned to screen tiles with a loose axis-aligned bounding box, so it touches tiles it never actually covers and blends them for nothing. Fitting the splat to the tiles it truly overlaps removes that wasted blending.</p>
+                                <p>Second, the backward pass usually writes gradients out to global memory and the optimizer reads them back. <strong>Fusing</strong> gradient computation with the optimizer step keeps those values in registers and shared memory, avoiding the round trip. See Speedy-Splat and Faster-GS.</p>
+
+                                <div class="gs-diagram">
+                                    <div class="gs-panel">
+                                        <svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Loose bounding box covering unneeded tiles">
+                                            <rect x="1" y="1" width="118" height="88" rx="4" fill="none" stroke="#bbb"/>
+                                            <line x1="30" y1="1" x2="30" y2="89" stroke="#ddd"/>
+                                            <line x1="60" y1="1" x2="60" y2="89" stroke="#ddd"/>
+                                            <line x1="90" y1="1" x2="90" y2="89" stroke="#ddd"/>
+                                            <line x1="1" y1="30" x2="119" y2="30" stroke="#ddd"/>
+                                            <line x1="1" y1="60" x2="119" y2="60" stroke="#ddd"/>
+                                            <rect x="30" y="30" width="60" height="30" fill="#c0392b" opacity="0.15"/>
+                                            <ellipse cx="60" cy="45" rx="20" ry="9" fill="#00796b" opacity="0.85"/>
+                                        </svg>
+                                        <div class="cap"><strong>Loose bounding box</strong>blends tiles it never covers</div>
+                                    </div>
+                                    <div class="gs-arrow">&rarr;</div>
+                                    <div class="gs-panel">
+                                        <svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Tight tile fit touching only covered tiles">
+                                            <rect x="1" y="1" width="118" height="88" rx="4" fill="none" stroke="#bbb"/>
+                                            <line x1="30" y1="1" x2="30" y2="89" stroke="#ddd"/>
+                                            <line x1="60" y1="1" x2="60" y2="89" stroke="#ddd"/>
+                                            <line x1="90" y1="1" x2="90" y2="89" stroke="#ddd"/>
+                                            <line x1="1" y1="30" x2="119" y2="30" stroke="#ddd"/>
+                                            <line x1="1" y1="60" x2="119" y2="60" stroke="#ddd"/>
+                                            <rect x="40" y="30" width="40" height="30" fill="#00796b" opacity="0.15"/>
+                                            <ellipse cx="60" cy="45" rx="20" ry="9" fill="#00796b" opacity="0.85"/>
+                                        </svg>
+                                        <div class="cap"><strong>Tight tile fit</strong>only the tiles it actually covers</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Training Command</h2>
+                    <div class="content">
+                        <p>Reproduce the run with the prebuilt <code>brush_app.exe</code> (no installation) on the truck dataset:</p>
+                        <div class="code-file">
+                            <div class="code-header" onclick="toggleCode('train_cmd')">
+                                <h4>Train (PowerShell)</h4>
+                                <button class="copy-button" onclick="copyCode('train_cmd')">Copy</button>
+                            </div>
+                            <div class="code-content active" id="train_cmd">
+                                <pre class="code-block"><code>.\brush_app.exe "data\tandt\truck" `
+  --total-steps 30000 --max-splats 3000000 --max-resolution 1600 `
+  --eval-split-every 8 --eval-every 5000 --eval-save-to-disk `
+  --export-path "output\truck" --export-name "truck_{iter}.ply" --export-every 10000</code></pre>
+                            </div>
+                        </div>
+                        <p>The key flags:</p>
+                        <ul>
+                            <li><code>--max-splats 3000000</code> is the budget cap from Takeaway&nbsp;1, the main quality-versus-VRAM lever. The run settled at 1.63M, well under the cap.</li>
+                            <li><code>--eval-split-every 8</code> holds out every 8th image for evaluation, so the renders shown above are on views never used for training.</li>
+                            <li><code>--total-steps</code>, <code>--max-resolution</code>, and the <code>--export-*</code> flags control training length, input resolution, and when the <code>.ply</code> is written to disk.</li>
+                        </ul>
+                        <p>View the exported model locally with <code>.\brush_app.exe "output\truck\truck_30000.ply"</code>.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Attribution</h2>
+                    <div class="content">
+                        <p>Brush is created by Arthur Brussee and is used here as the training and rendering engine. The contribution in this project is the dataset setup, training run, evaluation, and analysis.</p>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleCode(id) {
+            const content = document.getElementById(id);
+            content.classList.toggle('active');
+        }
+
+        function copyCode(id) {
+            const codeBlock = document.getElementById(id).querySelector('code');
+            const textArea = document.createElement('textarea');
+            textArea.value = codeBlock.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = 'Copied!';
+            setTimeout(() => {
+                button.textContent = originalText;
+            }, 2000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectData = getProjectData('gaussian-splatting-brush');
+
+            const headerElement = document.getElementById('project-header');
+            headerElement.innerHTML = `
+                <h1>${projectData.title}</h1>
+                <div class="project-description" style="margin: 20px 0;">
+                    <p>${projectData.description}</p>
+                </div>
+                <div class="project-meta">
+                    <p>${projectData.dateLabel}: ${projectData.date}</p>
+                    <div class="project-tags">
+                        ${projectData.tags.map(tag => `<span class="tag">${tag}</span>`).join('\n                        ')}
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
