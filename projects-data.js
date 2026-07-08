@@ -11,6 +11,17 @@ const PROJECTS_DATA = {
     //     imageAlt: '2D+t temporal medical structure segmentation',
     //     url: 'topics/medical-structure-segmentation.html'
     // },
+    'xai-breast-cancer-detection': {
+        id: 'xai-breast-cancer-detection',
+        title: 'Explainable AI for Breast Cancer Detection',
+        description: 'A dual-track deep learning system that classifies breast ultrasound as benign/malignant/normal, segments the lesion, and cross-checks Grad-CAM attention against the predicted mask with a coverage-based agreement rule. Reached 86.4% accuracy and 3.64/5 in clinical review.',
+        tags: ['Medical Imaging', 'Explainable AI', 'Grad-CAM', 'ResNet50', 'U-Net'],
+        date: 'June 2026',
+        dateLabel: 'Completed',
+        image: 'images/xai-gradcam-malignant.png',
+        imageAlt: 'Grad-CAM explanation on a malignant breast ultrasound',
+        url: 'topics/xai-breast-cancer-detection.html'
+    },
     'surfing-paper': {
         id: 'surfing-paper',
         title: 'Surfing Maneuver Recognition: When 2D Outperform Spatiotemporal 3D',
