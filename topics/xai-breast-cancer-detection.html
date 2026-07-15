@@ -38,6 +38,24 @@
             background: #fff;
             padding: 8px;
         }
+        .methodology-figure {
+            margin: 24px 0;
+            text-align: center;
+        }
+        .methodology-figure img {
+            max-width: 100%;
+            height: auto;
+            background: #fff;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+        .methodology-figure figcaption {
+            margin-top: 8px;
+            font-size: 0.9em;
+            color: #555;
+            font-style: italic;
+        }
         .disclaimer {
             margin-top: 20px;
             padding: 12px 15px;
@@ -167,6 +185,11 @@
                             <li><strong>Lower track (where):</strong> a segmentor independently predicts a binary lesion mask.</li>
                             <li><strong>Comparison node:</strong> the heatmap is thresholded into an attention region and compared with the mask, producing a single agreement badge.</li>
                         </ul>
+
+                        <figure class="methodology-figure">
+                            <img src="../images/xai-methodology-overview.png" alt="Full methodology overview: dual-track pipeline showing the classifier and Grad-CAM track, the segmentor track, and the comparison node that links them">
+                            <figcaption>Full pipeline: the two tracks and how they feed the comparison node.</figcaption>
+                        </figure>
 
                         <div class="results-gallery concept-gallery">
                             <div class="result-item">
